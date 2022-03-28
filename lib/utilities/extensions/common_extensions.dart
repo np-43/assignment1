@@ -1,0 +1,25 @@
+import 'dart:convert';
+
+extension ExtString on String {
+
+  bool isSpaceEmpty() {
+    return trim().isEmpty;
+  }
+
+}
+
+extension ExtMap on Map {
+
+  String toJSONString() {
+    return jsonEncode(this).toString();
+  }
+
+}
+
+extension ExtList on List {
+
+  String toJSONString() {
+    return jsonEncode(this).toString();
+  }
+
+}

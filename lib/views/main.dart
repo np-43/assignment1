@@ -1,3 +1,5 @@
+import 'package:assignment1/utilities/general_utility.dart';
+import 'package:assignment1/utilities/managers/api_manager.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navKey,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -33,8 +36,17 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    setState(() {
-      _counter++;
+    // setState(() {
+    //   _counter++;
+    // });
+    APIManager.shared.performCall(api: API.getDoctors, completion: (status, message, response){
+      if(status != true) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        final snackBar = SnackBar(
+          content: Text(message),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     });
   }
 
