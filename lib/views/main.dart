@@ -1,8 +1,10 @@
 import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/api_manager.dart';
+import 'package:assignment1/utilities/managers/shared_preference_manager.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  await SharedPrefsManager.initSharedPreference();
   runApp(const MyApp());
 }
 
