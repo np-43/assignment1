@@ -1,6 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import '../base_classes/base_text.dart';
+import '../constants/color_constant.dart';
 import 'custom_controls/np_alert_dialog.dart';
 import 'custom_controls/np_loader_dialog.dart';
 import 'managers/font_enum.dart';
@@ -68,6 +70,12 @@ extension ExtGeneralUtility1 on GeneralUtility {
 
   Size getScreenSize(BuildContext buildContext) {
     return MediaQuery.of(buildContext).size;
+  }
+
+  getNoDataView({String? message}) {
+    return Center(
+      child:  BaseText(text: message ?? "No data found", color: ColorConst.black, fontSize: 20,),
+    );
   }
 
 }

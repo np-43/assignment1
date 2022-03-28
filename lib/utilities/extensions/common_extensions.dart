@@ -6,6 +6,10 @@ extension ExtString on String {
     return trim().isEmpty;
   }
 
+  int? toInt() {
+    return int.tryParse(this);
+  }
+
 }
 
 extension ExtMap on Map {
