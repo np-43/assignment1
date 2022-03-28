@@ -35,8 +35,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dio: ^4.0.4
+  connectivity_plus: ^2.2.1
   intl: ^0.17.0
   shared_preferences: ^2.0.13
+  flutter_spinkit: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +61,32 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+#    - assets/images/
+#    - assets/images/svgs/
+    - assets/fonts/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto/Roboto-Bold.ttf
+          weight: 900
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto/Roboto-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Roboto/Roboto-Thin.ttf
+          weight: 100
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/fonts/Roboto_Condensed/RobotoCondensed-Bold.ttf
+          weight: 900
+        - asset: assets/fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto_Condensed/RobotoCondensed-Light.ttf
+          weight: 300
 
   # To add assets to your application, add an assets section, like this:
   # assets:

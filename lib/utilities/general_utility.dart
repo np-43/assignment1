@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'custom_controls/np_alert_dialog.dart';
 import 'custom_controls/np_loader_dialog.dart';
+import 'managers/font_enum.dart';
 
 class GeneralUtility {
 
@@ -39,8 +40,10 @@ extension ExtAlertAction on AlertAction {
 
 extension ExtGeneralUtility1 on GeneralUtility {
 
-  getTextStyle({Color? color, Color? bgColor, double fontSize = 15}) {
+  getTextStyle({MyFont myFont = MyFont.rRegular, Color? color, Color? bgColor, double fontSize = 15}) {
     return TextStyle(
+      fontFamily: myFont.family,
+      fontWeight: myFont.weight,
       color: color,
       backgroundColor: bgColor,
       fontSize: fontSize

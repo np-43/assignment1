@@ -1,4 +1,5 @@
-import 'package:assignment1/utilities/extensions/common_extensions.dart';
+import '../../utilities/extensions/common_extensions.dart';
+import '../../utilities/general_utility.dart';
 import 'package:dio/dio.dart';
 
 enum HttpMethod { get, post, put, delete }
@@ -87,20 +88,27 @@ class APIManager {
 extension on APIManager {
 
   _performRequest({required API api, dynamic data, required APIResponseBlock completion}) {
-    _dio.request(
-      api.getURL(data),
-      data: api.getData(data),
-      queryParameters: api.getQueryParameter(data),
-      options: Options(method: api.method.value, headers: api.headers)
-    ).then((value) {
-      print(value.data.toString());
-      _handleAPIResponse(api, value, completion);
-    }).catchError((error) {
-      print("\nError: ${error.toString()}\n");
-      if(error is DioError) {
-        completion(false, error.message.toString(), null);
+    GeneralUtility.shared.checkConnectivity().then((value) {
+      if (value) {
+        _dio.request(
+            api.getURL(data),
+            data: api.getData(data),
+            queryParameters: api.getQueryParameter(data),
+            options: Options(method: api.method.value, headers: api.headers)
+        ).then((value) {
+          print(value.data.toString());
+          _handleAPIResponse(api, value, completion);
+        }).catchError((error) {
+          print("\nError: ${error.toString()}\n");
+          if(error is DioError) {
+            completion(false, error.message.toString(), null);
+          } else {
+            completion(false, error.toString(), null);
+          }
+        });
       } else {
-        completion(false, error.toString(), null);
+        GeneralUtility.shared.showSnackBar("No internet connection.");
+        completion(false, "No internet connection.", null);
       }
     });
   }

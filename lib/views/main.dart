@@ -2,10 +2,17 @@ import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/api_manager.dart';
 import 'package:assignment1/utilities/managers/shared_preference_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefsManager.initSharedPreference();
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]).then((_){
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -43,11 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // });
     APIManager.shared.performCall(api: API.getDoctors, completion: (status, message, response){
       if(status != true) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        final snackBar = SnackBar(
-          content: Text(message),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        GeneralUtility.shared.showSnackBar(message);
       }
     });
   }
