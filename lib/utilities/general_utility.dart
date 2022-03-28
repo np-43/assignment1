@@ -66,6 +66,10 @@ extension ExtGeneralUtility1 on GeneralUtility {
     return false;
   }
 
+  Size getScreenSize(BuildContext buildContext) {
+    return MediaQuery.of(buildContext).size;
+  }
+
 }
 
 extension ExtGeneralUtility2 on GeneralUtility {

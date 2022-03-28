@@ -12,4 +12,6 @@ class ColorConst {
   static const Color white = Color(0xFFFFFFFF);
   static const Color grey = Color(0xFF808080);
 
+  static const Color buttonBG = Color(0xFF19B892);
+
 }
