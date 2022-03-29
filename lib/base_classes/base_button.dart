@@ -4,7 +4,7 @@ import '../utilities/managers/font_enum.dart';
 import 'base_text.dart';
 
 class BaseMaterialButton extends MaterialButton{
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String buttonText;
   final Color? buttonColor;
   final Color? textColor;
@@ -21,6 +21,7 @@ class BaseMaterialButton extends MaterialButton{
             borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
           ),
           color: buttonColor ?? ColorConst.buttonBG,
+          disabledColor: ColorConst.grey,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           elevation: 0,

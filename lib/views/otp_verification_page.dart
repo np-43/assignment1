@@ -49,18 +49,15 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             SizedBox(height: (height * 0.2)),
             BaseText(text: "ENTER VERIFICATION CODE", myFont: MyFont.rcBold, color: ColorConst.white,),
             bodyView(),
-            BaseMaterialButton("Login", (){
+            BaseMaterialButton("Login", isAgree ? (){
               print(otp);
               if(otp.length != 6) {
                 GeneralUtility.shared.showSnackBar("Please enter valid OTP.");
                 return;
               }
-              if(isAgree != true) {
-                GeneralUtility.shared.showSnackBar("Please agree to the Terms Of Use and Privacy Policy.");
-                return;
-              }
               // Move to next screen.
-            }),
+            } : null,
+            buttonColor: ColorConst.buttonBG,),
             SizedBox(
               height: (height * 0.2),
               child: Padding(
