@@ -58,6 +58,12 @@ extension ExtGeneralUtility1 on GeneralUtility {
     });
   }
 
+  pushAndRemove(BuildContext context, Widget page, {int delay = 1}) {
+    Future.delayed(Duration(microseconds: delay), (){
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => page), (_) => false);
+    });
+  }
+
   Future<bool> checkConnectivity() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {
