@@ -1,4 +1,5 @@
 import 'package:assignment1/constants/color_constant.dart';
+import 'package:assignment1/views/doctors_listing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import '../base_classes/base_button.dart';
@@ -55,7 +56,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                 GeneralUtility.shared.showSnackBar("Please enter valid OTP.");
                 return;
               }
-              // Move to next screen.
+              GeneralUtility.shared.pushAndRemove(context, const DoctorsListingPage());
             } : null,
             buttonColor: ColorConst.buttonBG,),
             SizedBox(

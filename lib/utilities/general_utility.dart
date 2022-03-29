@@ -1,3 +1,4 @@
+import 'package:assignment1/constants/image_constant.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -6,6 +7,7 @@ import '../constants/color_constant.dart';
 import 'custom_controls/np_alert_dialog.dart';
 import 'custom_controls/np_loader_dialog.dart';
 import 'managers/font_enum.dart';
+import 'extensions/common_extensions.dart';
 
 class GeneralUtility {
 
@@ -82,6 +84,27 @@ extension ExtGeneralUtility1 on GeneralUtility {
     return Center(
       child:  BaseText(text: message ?? "No data found", color: ColorConst.black, fontSize: 20,),
     );
+  }
+
+  Image getAssetImage({String? name, double? height, double? width, BoxFit? fit, String? ext, Color? color}){
+    if (height != null || width != null) {
+      return Image.asset("assets/images/${name ?? ""}.${ext ?? "png"}", fit: fit ?? BoxFit.none, color: color, height: height, width: width,);
+    }
+    return Image.asset("assets/images/${name ?? ""}.${ext ?? "png"}", fit: fit ?? BoxFit.fill, color: color,);
+  }
+
+  Image getNetworkImage({String? url, double? height, double? width, BoxFit? fit, String? ext, Color? color}){
+    if (url?.isSpaceEmpty() ?? false) {
+      return getAssetImage(name: ImageConst.icUserDoctorPlaceholder, ext: "png", height: height, width: width, fit: fit, color: color);
+    }
+    if (height != null || width != null) {
+      return Image.network(url ?? "", fit: fit ?? BoxFit.none, color: color, height: height, width: width, errorBuilder: (context,object,_) {
+        return getAssetImage(name: ImageConst.icUserDoctorPlaceholder, ext: "png", height: height, width: width, fit: fit, color: color);
+      },);
+    }
+    return Image.network(url ?? "", fit: fit ?? BoxFit.fill, color: color, height: height, width: width, errorBuilder: (context,object,_) {
+      return getAssetImage(name: ImageConst.icUserDoctorPlaceholder, ext: "png", height: height, width: width, fit: fit, color: color);
+    },);
   }
 
 }

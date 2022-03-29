@@ -64,8 +64,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-#    - assets/images/
-#    - assets/images/svgs/
+    - assets/images/
     - assets/fonts/
     - assets/jsons/
 
