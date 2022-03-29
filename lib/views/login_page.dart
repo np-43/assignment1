@@ -75,7 +75,6 @@ extension on _LoginPageState {
               mobileNumberView(),
               const SizedBox(height: 10),
               Expanded(child: BaseText(text: "We will send you an SMS with the verification code to this number", color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
-              Expanded(child: Container())
             ],
           ),
         )
@@ -105,13 +104,15 @@ extension on _LoginPageState {
             // const SizedBox(width: 5),
             Expanded(
                 child: BaseTextField(
+                  // maxLength: 10,
                   controller: phoneNumberController,
                   myFont: MyFont.rcBold,
                   fillColor: Colors.transparent,
                   hintText: "Enter phone number",
                   textInputType: TextInputType.number,
                   inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
                   ],
                   borderColor: Colors.transparent,
                   textColor: ColorConst.accent,

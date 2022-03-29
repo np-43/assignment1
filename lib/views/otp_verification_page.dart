@@ -1,9 +1,8 @@
 import 'package:assignment1/constants/color_constant.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import '../base_classes/base_button.dart';
 import '../base_classes/base_text.dart';
-import '../base_classes/base_textfield.dart';
 import '../utilities/general_utility.dart';
 import '../utilities/managers/font_enum.dart';
 
@@ -26,6 +25,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       _isAgree = value;
     });
   }
+  String otp = "";
 
   @override
   void initState() {
@@ -50,10 +50,16 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             BaseText(text: "ENTER VERIFICATION CODE", myFont: MyFont.rcBold, color: ColorConst.white,),
             bodyView(),
             BaseMaterialButton("Login", (){
+              print(otp);
+              if(otp.length != 6) {
+                GeneralUtility.shared.showSnackBar("Please enter valid OTP.");
+                return;
+              }
               if(isAgree != true) {
                 GeneralUtility.shared.showSnackBar("Please agree to the Terms Of Use and Privacy Policy.");
                 return;
               }
+              // Move to next screen.
             }),
             SizedBox(
               height: (height * 0.2),
@@ -119,23 +125,31 @@ extension on _OTPVerificationPageState {
             otpInputView(),
             const SizedBox(height: 10),
             Expanded(child: BaseText(text: "Please enter the verification code that was sent to ${widget.phone}", color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
-            Expanded(child: Container())
           ],
         )
     );
   }
 
   otpInputView() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container()
-          ],
-        ),
-        Container(height: 1, color: ColorConst.white),
-      ],
+    double fieldWidth = ((MediaQuery.of(context).size.width - 40 - 50)/6);
+    return OtpTextField(
+        filled: true,
+        fillColor: ColorConst.primaryDark,
+        numberOfFields: 6,
+        borderColor: Colors.transparent,
+        disabledBorderColor: Colors.transparent,
+        enabledBorderColor: Colors.transparent,
+        cursorColor: ColorConst.accent,
+        borderWidth: 0,
+        fieldWidth: fieldWidth,
+        showFieldAsBox: true,
+        textStyle: GeneralUtility.shared.getTextStyle(myFont: MyFont.rcBold, fontSize: 20, color: ColorConst.accent),
+        onCodeChanged: (value){
+          print(value);
+        },
+        onSubmit: (String verificationCode){
+          otp = verificationCode;
+        }
     );
   }
 
