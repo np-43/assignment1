@@ -6,6 +6,7 @@ import '../base_classes/base_button.dart';
 import '../base_classes/base_text.dart';
 import '../utilities/general_utility.dart';
 import '../utilities/managers/font_enum.dart';
+import '../utilities/managers/np_firebase_manager.dart';
 
 class OTPVerificationPage extends StatefulWidget {
 
@@ -56,7 +57,8 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                 GeneralUtility.shared.showSnackBar("Please enter valid OTP.");
                 return;
               }
-              GeneralUtility.shared.pushAndRemove(context, const DoctorsListingPage());
+              NPFirebaseManager.shared.signInWithPhoneNumber(otp);
+              // GeneralUtility.shared.pushAndRemove(context, const DoctorsListingPage());
             } : null,
             buttonColor: ColorConst.buttonBG,),
             SizedBox(
@@ -142,8 +144,7 @@ extension on _OTPVerificationPageState {
         fieldWidth: fieldWidth,
         showFieldAsBox: true,
         textStyle: GeneralUtility.shared.getTextStyle(myFont: MyFont.rcBold, fontSize: 20, color: ColorConst.accent),
-        onCodeChanged: (value){
-          print(value);
+        onCodeChanged: (_){
         },
         onSubmit: (String verificationCode){
           otp = verificationCode;

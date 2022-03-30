@@ -1,4 +1,5 @@
 import 'package:assignment1/utilities/general_utility.dart';
+import 'package:assignment1/utilities/managers/np_firebase_manager.dart';
 import 'package:assignment1/utilities/managers/shared_preference_manager.dart';
 import 'package:assignment1/views/login_page.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefsManager.initSharedPreference();
+  await NPFirebaseManager.initFirebase();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown

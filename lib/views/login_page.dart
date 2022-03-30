@@ -10,6 +10,7 @@ import 'package:assignment1/utilities/managers/font_enum.dart';
 import 'package:assignment1/views/otp_verification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:assignment1/utilities/managers/np_firebase_manager.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -47,11 +48,13 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: (height * 0.2)),
             BaseText(text: "ENTER YOUR MOBILE NUMBER", myFont: MyFont.rcBold, color: ColorConst.white,),
             bodyView(),
-            BaseMaterialButton("Continue", (){
+            BaseMaterialButton("Continue", () async {
               if(phoneNumberController.text.isSpaceEmpty()) {
                 GeneralUtility.shared.showSnackBar("Please enter valid phone number.");
               } else {
-                GeneralUtility.shared.pushAndRemove(context, OTPVerificationPage(phoneNumberController.text));
+                NPFirebaseManager.shared.verifyPhoneNumber(countryCode: countryCodeController.text, phoneNumber: phoneNumberController.text, completion: (){
+                  GeneralUtility.shared.pushAndRemove(context, OTPVerificationPage(phoneNumberController.text));
+                });
               }
             }),
             SizedBox(height: (height * 0.2)),
