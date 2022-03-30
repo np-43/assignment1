@@ -10,6 +10,10 @@ extension ExtString on String {
     return int.tryParse(this);
   }
 
+  double? toDouble() {
+    return double.tryParse(this);
+  }
+
 }
 
 extension ExtMap on Map {

@@ -5,6 +5,7 @@ import 'package:assignment1/models/doctor_model.dart';
 import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/api_manager.dart';
 import 'package:assignment1/utilities/managers/font_enum.dart';
+import 'package:assignment1/views/doctor_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class DoctorsListingPage extends StatefulWidget {
@@ -34,6 +35,13 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> {
         actions: [
           GeneralUtility.shared.getAssetImage(name: ImageConst.icBimaLogo)
         ],
+        leading: IconButton(
+          onPressed: (){},
+          icon: const Icon(Icons.menu),
+          color: ColorConst.primary,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
       ),
       resizeToAvoidBottomInset: false,
       backgroundColor: ColorConst.white,
@@ -57,41 +65,46 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> {
 extension on _DoctorsListingPageState {
 
   getListCellView(DoctorModel model) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      height: 90,
-      width: GeneralUtility.shared.getScreenSize(context).width,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(25.0),
-              child: Container(
-                decoration: BoxDecoration(
+    return InkWell(
+      onTap: (){
+        GeneralUtility.shared.push(context, DoctorDetailPage(model));
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        height: 90,
+        width: GeneralUtility.shared.getScreenSize(context).width,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
                   border: Border.all(color: ColorConst.grey, width: 1),
                   borderRadius: BorderRadius.circular(25)
-                ),
-                  height: 50,
-                  width: 50,
-                  child: GeneralUtility.shared.getNetworkImage(url: model.profilePic, height: 50, width: 50, fit: BoxFit.fill)
-              )
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                BaseText(textAlignment: TextAlign.left, text: model.fullName, color: ColorConst.primary, myFont: MyFont.rBold, fontSize: 17,),
-                const SizedBox(height: 5),
-                BaseText(textAlignment: TextAlign.left, text: model.specialization ?? "", color: ColorConst.primary, fontSize: 15,),
-                const SizedBox(height: 5),
-                BaseText(textAlignment: TextAlign.left, text: model.description ?? "", color: ColorConst.grey, textOverflow: TextOverflow.ellipsis, numberOfLines: 2, fontSize: 14,),
-              ],
+              ),
+              height: 50,
+              width: 50,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: GeneralUtility.shared.getNetworkImage(url: model.profilePic, fit: BoxFit.fill)
+              ),
             ),
-          ),
-          const Icon(Icons.chevron_right)
-        ],
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BaseText(textAlignment: TextAlign.left, text: model.fullName, color: ColorConst.primary, myFont: MyFont.rBold, fontSize: 17,),
+                  const SizedBox(height: 5),
+                  BaseText(textAlignment: TextAlign.left, text: model.specialization?.toUpperCase() ?? "", color: ColorConst.primary, fontSize: 15,),
+                  const SizedBox(height: 5),
+                  BaseText(textAlignment: TextAlign.left, text: model.description ?? "", color: ColorConst.grey, textOverflow: TextOverflow.ellipsis, numberOfLines: 2, fontSize: 14,),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right)
+          ],
+        ),
       ),
     );
   }
@@ -101,10 +114,12 @@ extension on _DoctorsListingPageState {
 extension on _DoctorsListingPageState {
 
   prepareDoctorListingData() {
+    GeneralUtility.shared.showProcessing();
     APIManager.shared.performCall(api: API.getDoctors, completion: (status, message, response){
       List<dynamic> list = response;
       listDoctorModel = list.map((e) => DoctorModel.fromJson(e)).toList();
       setState(() {});
+      GeneralUtility.shared.hideProcessing();
     });
   }
 

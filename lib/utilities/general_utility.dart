@@ -66,6 +66,12 @@ extension ExtGeneralUtility1 on GeneralUtility {
     });
   }
 
+  pop(BuildContext context, {int delay = 1}) {
+    Future.delayed(Duration(microseconds: delay), (){
+      Navigator.of(context).pop();
+    });
+  }
+
   Future<bool> checkConnectivity() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {

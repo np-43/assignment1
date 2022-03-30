@@ -9,13 +9,15 @@ class BaseMaterialButton extends MaterialButton{
   final Color? buttonColor;
   final Color? textColor;
   final double? borderRadius;
+  final MyFont myFont;
   final double? fontSize;
+  final double verticalPadding;
   final double? horizontalPadding;
 
-  BaseMaterialButton(this.buttonText, this.onPressed, {Key? key, this.buttonColor, this.textColor, this.fontSize, this.borderRadius, this.horizontalPadding}) :
+  BaseMaterialButton(this.buttonText, this.onPressed, {Key? key, this.buttonColor, this.textColor, this.myFont = MyFont.rcBold, this.fontSize, this.borderRadius, this.verticalPadding = 10, this.horizontalPadding}) :
         super(
           key: key,
-          child: BaseText(text: buttonText, color: textColor ?? Colors.white, myFont: MyFont.rcBold, fontSize: fontSize ?? 20,),
+          child: BaseText(text: buttonText, color: textColor ?? Colors.white, myFont: myFont, fontSize: fontSize ?? 20,),
           onPressed: onPressed,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
@@ -25,6 +27,6 @@ class BaseMaterialButton extends MaterialButton{
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           elevation: 0,
-          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: horizontalPadding ?? 40)
+          padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: horizontalPadding ?? 40)
       );
 }
