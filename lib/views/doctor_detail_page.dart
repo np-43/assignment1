@@ -8,15 +8,17 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../base_classes/base_button.dart';
 import 'package:assignment1/utilities/extensions/common_extensions.dart';
 
+import '../constants/string_constant.dart';
+
 enum PersonalDetailEnum { firstName, lastName, specialization, contactNumber, rating }
 extension on PersonalDetailEnum {
   String get displayText {
     switch(this) {
-      case PersonalDetailEnum.firstName: return "FIRST NAME";
-      case PersonalDetailEnum.lastName: return "LAST NAME";
-      case PersonalDetailEnum.specialization: return "SPECIALIZATION";
-      case PersonalDetailEnum.contactNumber: return "CONTACT NUMBER";
-      case PersonalDetailEnum.rating: return "RATING";
+      case PersonalDetailEnum.firstName: return StringConst.firstName;
+      case PersonalDetailEnum.lastName: return StringConst.lastName;
+      case PersonalDetailEnum.specialization: return StringConst.specialization;
+      case PersonalDetailEnum.contactNumber: return StringConst.contactNumber;
+      case PersonalDetailEnum.rating: return StringConst.rating;
     }
   }
 }
@@ -105,7 +107,7 @@ extension on _DoctorDetailPageState {
                 const SizedBox(height: 10),
                 SizedBox(
                   height: 30,
-                  child: BaseMaterialButton("EDIT PROFILE", (){
+                  child: BaseMaterialButton(StringConst.editProfile, (){
                   }, buttonColor: ColorConst.buttonBG, verticalPadding: 0, horizontalPadding: 20, fontSize: 17,),
                 ),
               ],
@@ -125,7 +127,7 @@ extension on _DoctorDetailPageState {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 10),
-              BaseText(text: "PERSONAL DETAILS", myFont: MyFont.rcBold,),
+              BaseText(text: StringConst.personalDetail, myFont: MyFont.rcBold,),
               const SizedBox(height: 10),
               Column(
                 children: PersonalDetailEnum.values.map((e) => personalDetailCellView(e)).toList(),

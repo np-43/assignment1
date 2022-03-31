@@ -1,4 +1,5 @@
 import 'package:assignment1/constants/color_constant.dart';
+import 'package:assignment1/constants/string_constant.dart';
 import 'package:assignment1/views/doctors_listing_page.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
@@ -49,12 +50,12 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: (height * 0.2)),
-            BaseText(text: "ENTER VERIFICATION CODE", myFont: MyFont.rcBold, color: ColorConst.white,),
+            BaseText(text: StringConst.otpPageTitle, myFont: MyFont.rcBold, color: ColorConst.white,),
             bodyView(),
             BaseMaterialButton("Login", isAgree ? (){
               print(otp);
               if(otp.length != 6) {
-                GeneralUtility.shared.showSnackBar("Please enter valid OTP.");
+                GeneralUtility.shared.showSnackBar(StringConst.otpInputValidationMsg);
                 return;
               }
               GeneralUtility.shared.showProcessing(isFromInitState: false);
@@ -97,10 +98,10 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                               ),
                             ),
                           ),
-                          BaseText(text: "I agree to the ", fontSize: 15, color: ColorConst.white),
-                          BaseText(text: "Terms Of Use ", fontSize: 15, color: ColorConst.accent),
-                          BaseText(text: "and ", fontSize: 15, color: ColorConst.white),
-                          BaseText(text: "Privacy Policy ", fontSize: 15, color: ColorConst.accent),
+                          BaseText(text: "${StringConst.agreeTo} ", fontSize: 15, color: ColorConst.white),
+                          BaseText(text: "${StringConst.termsOfUse} ", fontSize: 15, color: ColorConst.accent),
+                          BaseText(text: "${StringConst.and} ", fontSize: 15, color: ColorConst.white),
+                          BaseText(text: StringConst.privacyPolicy, fontSize: 15, color: ColorConst.accent),
                         ],
                       ),
                     ),
@@ -127,7 +128,7 @@ extension on _OTPVerificationPageState {
             const SizedBox(height: 20),
             otpInputView(),
             const SizedBox(height: 20),
-            Expanded(child: BaseText(text: "Please enter the verification code that was sent to ${widget.phone}", color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
+            Expanded(child: BaseText(text: "${StringConst.otpDesc} ${widget.phone}", color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
           ],
         )
     );
@@ -149,7 +150,7 @@ extension on _OTPVerificationPageState {
         ),
       ),
       validator: (NPFirebaseManager.shared.code == null) ? null : (s) {
-        return s == NPFirebaseManager.shared.code! ? null : 'Invalid OTP';
+        return s == NPFirebaseManager.shared.code! ? null : StringConst.invalidOTP;
       },
       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
       showCursor: true,

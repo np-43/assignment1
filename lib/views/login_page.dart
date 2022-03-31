@@ -3,6 +3,7 @@ import 'package:assignment1/base_classes/base_button.dart';
 import 'package:assignment1/base_classes/base_text.dart';
 import 'package:assignment1/base_classes/base_textfield.dart';
 import 'package:assignment1/constants/color_constant.dart';
+import 'package:assignment1/constants/string_constant.dart';
 import 'package:assignment1/utilities/custom_controls/dropdown_textfield.dart';
 import 'package:assignment1/utilities/extensions/common_extensions.dart';
 import 'package:assignment1/utilities/general_utility.dart';
@@ -46,11 +47,11 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: (height * 0.2)),
-            BaseText(text: "ENTER YOUR MOBILE NUMBER", myFont: MyFont.rcBold, color: ColorConst.white,),
+            BaseText(text: StringConst.loginTitle, myFont: MyFont.rcBold, color: ColorConst.white,),
             bodyView(),
-            BaseMaterialButton("Continue", () async {
+            BaseMaterialButton(StringConst.continueText, () async {
               if(phoneNumberController.text.isSpaceEmpty()) {
-                GeneralUtility.shared.showSnackBar("Please enter valid phone number.");
+                GeneralUtility.shared.showSnackBar(StringConst.mobileValidationMsg);
               } else {
                 GeneralUtility.shared.showProcessing(isFromInitState: false);
                 NPFirebaseManager.shared.verifyPhoneNumber(countryCode: countryCodeController.text, phoneNumber: phoneNumberController.text, completion: (status){
@@ -81,7 +82,7 @@ extension on _LoginPageState {
               const SizedBox(height: 10),
               mobileNumberView(),
               const SizedBox(height: 10),
-              Expanded(child: BaseText(text: "We will send you an SMS with the verification code to this number", color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
+              Expanded(child: BaseText(text: StringConst.numberDesc, color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
             ],
           ),
         )
@@ -101,7 +102,7 @@ extension on _LoginPageState {
                   myFont: MyFont.rcBold,
                   dataList: countryCodeDropdownData,
                   controller: countryCodeController,
-                  hintText: "Select Country Code",
+                  hintText: StringConst.countryCodePlaceHolder,
                   textColor: ColorConst.buttonBG,
                   onChange: (option){
                     countryCodeController.text = option.value ?? "";
@@ -115,7 +116,7 @@ extension on _LoginPageState {
                   controller: phoneNumberController,
                   myFont: MyFont.rcBold,
                   fillColor: Colors.transparent,
-                  hintText: "Enter phone number",
+                  hintText: StringConst.phoneNumberPlaceHolder,
                   textInputType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,

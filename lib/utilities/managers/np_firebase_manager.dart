@@ -2,6 +2,8 @@ import 'package:assignment1/utilities/general_utility.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import '../../constants/string_constant.dart';
+
 class NPFirebaseManager {
 
   static NPFirebaseManager? _instance;
@@ -69,7 +71,7 @@ extension ExtNPFirebaseManager on NPFirebaseManager {
         completion(true);
       });
     } catch (e) {
-      GeneralUtility.shared.showSnackBar("Invalid OTP");
+      GeneralUtility.shared.showSnackBar(StringConst.invalidOTP);
       completion(false);
     }
   }
