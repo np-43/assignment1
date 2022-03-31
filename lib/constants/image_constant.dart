@@ -7,4 +7,10 @@ class ImageConst {
 
   static const String icUserDoctorPlaceholder = "ic_user_doctor_placeholder";
 
+  static const String icBloodGroup = "ic_blood_group";
+  static const String icCalender = "ic_calender";
+  static const String icHeight = "ic_height";
+  static const String icWeight = "ic_weight";
+
+
 }

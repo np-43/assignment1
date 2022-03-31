@@ -28,5 +28,11 @@ class StringConst {
   static const String contactNumber = "CONTACT NUMBER";
   static const String rating = "RATING";
   static const String editProfile = "EDIT PROFILE";
+  static const String day = "DAY";
+  static const String month = "MONTH";
+  static const String year = "YEAR";
+  static const String bloodGroup = "BLOOD GROUP";
+  static const String height = "HEIGHT";
+  static const String weight = "WEIGHT";
 
 }
