@@ -14,6 +14,7 @@ class NPFirebaseManager {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String? verificationID;
+  String? code;
   User? user;
 
   static initFirebase() async {
@@ -24,7 +25,7 @@ class NPFirebaseManager {
 
 extension ExtNPFirebaseManager on NPFirebaseManager {
 
-  verifyPhoneNumber({required String countryCode, required String phoneNumber, required void Function() completion}) {
+  verifyPhoneNumber({required String countryCode, required String phoneNumber, required void Function(bool) completion}) {
     String formattedNumber = countryCode + " " + phoneNumber;
     print(formattedNumber);
     _auth.verifyPhoneNumber(
@@ -33,38 +34,43 @@ extension ExtNPFirebaseManager on NPFirebaseManager {
         verificationCompleted: (PhoneAuthCredential phoneAuthCredential){
           print("verfiy completed");
           print(phoneAuthCredential.smsCode ?? "");
-          completion();
+          code = phoneAuthCredential.smsCode;
+          completion(true);
         },
         verificationFailed: (FirebaseAuthException error) {
           print("verfiy failed");
           print(error.message ?? "");
-          completion();
+          completion(false);
         },
         codeSent: (String verificationId, int? forceResendingToken) {
           print("code sent");
           print(verificationId);
           verificationID = verificationId;
-          completion();
+          completion(true);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           print("code auto retrieval timeout");
           print(verificationId);
           verificationID = verificationId;
-          completion();
+          completion(true);
         }
     );
   }
 
-  void signInWithPhoneNumber(String otp) async {
+  void signInWithPhoneNumber(String otp, void Function(bool) completion) {
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationID ?? "",
         smsCode: otp,
       );
-      user = (await _auth.signInWithCredential(credential)).user;
-      print("UID: ${user?.uid ?? ""}");
+      _auth.signInWithCredential(credential).then((value) {
+        user = value.user;
+        print("UID: ${user?.uid ?? ""}");
+        completion(true);
+      });
     } catch (e) {
       GeneralUtility.shared.showSnackBar("Invalid OTP");
+      completion(false);
     }
   }
 

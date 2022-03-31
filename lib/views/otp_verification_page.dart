@@ -1,7 +1,7 @@
 import 'package:assignment1/constants/color_constant.dart';
 import 'package:assignment1/views/doctors_listing_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:pinput/pinput.dart';
 import '../base_classes/base_button.dart';
 import '../base_classes/base_text.dart';
 import '../utilities/general_utility.dart';
@@ -57,8 +57,11 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                 GeneralUtility.shared.showSnackBar("Please enter valid OTP.");
                 return;
               }
-              NPFirebaseManager.shared.signInWithPhoneNumber(otp);
-              // GeneralUtility.shared.pushAndRemove(context, const DoctorsListingPage());
+              GeneralUtility.shared.showProcessing(isFromInitState: false);
+              NPFirebaseManager.shared.signInWithPhoneNumber(otp, (status){
+                GeneralUtility.shared.hideProcessing(isFromInitState: false);
+                GeneralUtility.shared.pushAndRemove(context, const DoctorsListingPage());
+              });
             } : null,
             buttonColor: ColorConst.buttonBG,),
             SizedBox(
@@ -121,9 +124,9 @@ extension on _OTPVerificationPageState {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             otpInputView(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Expanded(child: BaseText(text: "Please enter the verification code that was sent to ${widget.phone}", color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
           ],
         )
@@ -131,25 +134,29 @@ extension on _OTPVerificationPageState {
   }
 
   otpInputView() {
+
     double fieldWidth = ((MediaQuery.of(context).size.width - 40 - 50)/6);
-    return OtpTextField(
-        filled: true,
-        fillColor: ColorConst.primaryDark,
-        numberOfFields: 6,
-        borderColor: Colors.transparent,
-        disabledBorderColor: Colors.transparent,
-        enabledBorderColor: Colors.transparent,
-        cursorColor: ColorConst.accent,
-        borderWidth: 0,
-        fieldWidth: fieldWidth,
-        showFieldAsBox: true,
-        textStyle: GeneralUtility.shared.getTextStyle(myFont: MyFont.rcBold, fontSize: 20, color: ColorConst.accent),
-        onCodeChanged: (_){
-        },
-        onSubmit: (String verificationCode){
-          otp = verificationCode;
-        }
+
+    return Pinput(
+      length: 6,
+      defaultPinTheme: PinTheme(
+        width: fieldWidth,
+        height: fieldWidth,
+        textStyle: GeneralUtility.shared.getTextStyle(myFont: MyFont.rcBold, fontSize: 30, color: ColorConst.accent),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: ColorConst.primaryDark
+        ),
+      ),
+      validator: (NPFirebaseManager.shared.code == null) ? null : (s) {
+        return s == NPFirebaseManager.shared.code! ? null : 'Invalid OTP';
+      },
+      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+      showCursor: true,
+      onCompleted: (pin) => otp = pin,
+      androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsRetrieverApi,
     );
+
   }
 
 }

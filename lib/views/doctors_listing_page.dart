@@ -7,6 +7,7 @@ import 'package:assignment1/utilities/managers/api_manager.dart';
 import 'package:assignment1/utilities/managers/font_enum.dart';
 import 'package:assignment1/views/doctor_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:assignment1/utilities/extensions/common_extensions.dart';
 
 class DoctorsListingPage extends StatefulWidget {
   const DoctorsListingPage({Key? key}) : super(key: key);
@@ -118,6 +119,9 @@ extension on _DoctorsListingPageState {
     APIManager.shared.performCall(api: API.getDoctors, completion: (status, message, response){
       List<dynamic> list = response;
       listDoctorModel = list.map((e) => DoctorModel.fromJson(e)).toList();
+      listDoctorModel.sort((model1, model2) {
+        return (model2.rating?.toDouble() ?? 0).compareTo((model1.rating?.toDouble() ?? 0));
+      });
       setState(() {});
       GeneralUtility.shared.hideProcessing();
     });

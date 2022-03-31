@@ -52,8 +52,12 @@ class _LoginPageState extends State<LoginPage> {
               if(phoneNumberController.text.isSpaceEmpty()) {
                 GeneralUtility.shared.showSnackBar("Please enter valid phone number.");
               } else {
-                NPFirebaseManager.shared.verifyPhoneNumber(countryCode: countryCodeController.text, phoneNumber: phoneNumberController.text, completion: (){
-                  GeneralUtility.shared.pushAndRemove(context, OTPVerificationPage(phoneNumberController.text));
+                GeneralUtility.shared.showProcessing(isFromInitState: false);
+                NPFirebaseManager.shared.verifyPhoneNumber(countryCode: countryCodeController.text, phoneNumber: phoneNumberController.text, completion: (status){
+                  GeneralUtility.shared.hideProcessing(isFromInitState: false);
+                  if(status) {
+                    GeneralUtility.shared.pushAndRemove(context, OTPVerificationPage(phoneNumberController.text));
+                  }
                 });
               }
             }),
