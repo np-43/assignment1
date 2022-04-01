@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import '../utilities/extensions/common_extensions.dart';
 import '../utilities/extensions/date_extension.dart';
+import '../utilities/general_utility.dart';
 
 class DoctorModel {
   int? id;
@@ -103,6 +105,14 @@ extension ExtDoctorModel on DoctorModel {
       }
     }
     return null;
+  }
+
+  Image getImage() {
+    if(isEdited) {
+      return GeneralUtility.shared.getBase64Image(base64String: profilePic, fit: BoxFit.fill);
+    } else {
+      return GeneralUtility.shared.getNetworkImage(url: profilePic, fit: BoxFit.fill);
+    }
   }
 
 }

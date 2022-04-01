@@ -164,7 +164,7 @@ extension on _DoctorsListingPageState {
               width: 50,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
-                  child: GeneralUtility.shared.getNetworkImage(url: model.profilePic, fit: BoxFit.fill)
+                  child: model.getImage()
               ),
             ),
             const SizedBox(width: 10),
@@ -231,7 +231,7 @@ extension on _DoctorsListingPageState {
               width: 50,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
-                  child: GeneralUtility.shared.getNetworkImage(url: model.profilePic, fit: BoxFit.fill)
+                  child: model.getImage()
               ),
             ),
             const SizedBox(width: 10),

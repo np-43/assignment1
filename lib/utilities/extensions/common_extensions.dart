@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
+
+import 'dart:ui';
 
 extension ExtString on String {
 
@@ -12,6 +15,13 @@ extension ExtString on String {
 
   double? toDouble() {
     return double.tryParse(this);
+  }
+
+  static String? getBase64(Uint8List? data) {
+    if(data != null) {
+      return base64Encode(data);
+    }
+    return null;
   }
 
 }

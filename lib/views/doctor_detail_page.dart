@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:assignment1/base_classes/base_text.dart';
 import 'package:assignment1/base_classes/base_textfield.dart';
 import 'package:assignment1/constants/color_constant.dart';
@@ -10,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../base_classes/base_button.dart';
 import 'package:assignment1/utilities/extensions/common_extensions.dart';
-import 'package:assignment1/utilities/extensions/date_extension.dart';
 import '../constants/string_constant.dart';
 
 enum _PersonalDetailEnum { firstName, lastName, specialization, contactNumber, rating }
@@ -168,8 +169,13 @@ extension on _DoctorDetailPageState {
                 InkResponse(
                   onTap: (isEdit) ?
                   (){
-                    GeneralUtility.shared.showImagePicker(imagePickType: (imagePickType, xFile){
-                      print(xFile?.path);
+                    GeneralUtility.shared.showImagePicker(imagePickType: (imagePickType, xFile) async {
+                      Uint8List? data = await xFile?.readAsBytes();
+                      String? base64Img = ExtString.getBase64(data);
+                      if(!(base64Img?.isSpaceEmpty() ?? true)) {
+                        widget.model.profilePic = base64Img;
+                        setState(() {});
+                      }
                     });
                   } : null,
                   child: Container(
@@ -181,7 +187,7 @@ extension on _DoctorDetailPageState {
                     width: 80,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(40),
-                        child: GeneralUtility.shared.getNetworkImage(url: widget.model.profilePic, fit: BoxFit.fill)
+                        child: widget.model.getImage()
                     ),
                   ),
                 ),

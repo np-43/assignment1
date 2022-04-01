@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:assignment1/constants/image_constant.dart';
 import 'package:assignment1/constants/string_constant.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -120,6 +122,13 @@ extension ExtGeneralUtility1 on GeneralUtility {
     return Image.network(url ?? "", fit: fit ?? BoxFit.fill, color: color, height: height, width: width, errorBuilder: (context,object,_) {
       return getAssetImage(name: ImageConst.icUserDoctorPlaceholder, ext: "png", height: height, width: width, fit: fit, color: color);
     },);
+  }
+
+  Image getBase64Image({String? base64String, double? height, double? width, BoxFit? fit, String? ext, Color? color}) {
+    if(base64String?.isSpaceEmpty() == true) {
+      return getAssetImage(name: ImageConst.icUserDoctorPlaceholder, ext: "png", height: height, width: width, fit: fit, color: color);
+    }
+    return Image.memory(base64Decode(base64String ?? ""), fit: fit, height: height, width: width, color: color);
   }
 
 }
