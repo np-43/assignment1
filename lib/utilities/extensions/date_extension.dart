@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart' as dt;
 
-enum DateFormat { ddmmyyyyDash, mmddyyyyDash, ddmmyyyySlash, mmddyyyySlash, yyyymmddhhmmssDashSpaceColon24Hr }
+enum DateFormat { ddmmyyyyDash, mmddyyyyDash, ddmmyyyySlash, mmddyyyySlash, ddmmmmyyyyDash, yyyymmddhhmmssDashSpaceColon24Hr }
 
 extension on DateFormat {
 
@@ -10,6 +10,7 @@ extension on DateFormat {
       case DateFormat.mmddyyyyDash: return "MM-dd-yyyy";
       case DateFormat.ddmmyyyySlash: return "dd/MM/yyyy";
       case DateFormat.mmddyyyySlash: return "MM/dd/yyyy";
+      case DateFormat.ddmmmmyyyyDash: return "dd-MMMM-yyyy";
       case DateFormat.yyyymmddhhmmssDashSpaceColon24Hr: return "yyyy-MM-dd HH:mm:ss";
     }
   }

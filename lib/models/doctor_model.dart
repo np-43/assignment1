@@ -1,4 +1,6 @@
+import 'package:tuple/tuple.dart';
 import '../utilities/extensions/common_extensions.dart';
+import '../utilities/extensions/date_extension.dart';
 
 class DoctorModel {
   int? id;
@@ -14,19 +16,23 @@ class DoctorModel {
   String? specialization;
   String? languagesKnown;
 
-  DoctorModel(
-      {this.id,
-        this.firstName,
-        this.lastName,
-        this.profilePic,
-        this.favorite,
-        this.primaryContactNo,
-        this.rating,
-        this.emailAddress,
-        this.qualification,
-        this.description,
-        this.specialization,
-        this.languagesKnown});
+  DateTime? dob;
+
+  DoctorModel({
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.profilePic,
+    this.favorite,
+    this.primaryContactNo,
+    this.rating,
+    this.emailAddress,
+    this.qualification,
+    this.description,
+    this.specialization,
+    this.languagesKnown,
+    this.dob
+  });
 
   DoctorModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -61,7 +67,7 @@ class DoctorModel {
   }
 
   DoctorModel copy() {
-    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown);
+    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown, dob: dob);
     return model;
   }
 
@@ -80,6 +86,17 @@ extension ExtDoctorModel on DoctorModel {
       return lastName!;
     }
     return "";
+  }
+
+  Tuple3<String, String, String>? getSeparatedDOB() {
+    if (dob != null) {
+      String? date = dob?.toFormattedString(DateFormat.ddmmmmyyyyDash);
+      if(date != null) {
+        List<String> list = date.split("-");
+        return Tuple3<String, String, String>.fromList(list);
+      }
+    }
+    return null;
   }
 
 }

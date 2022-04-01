@@ -309,12 +309,12 @@ extension on _DoctorDetailPageState {
                 children: [
                   GeneralUtility.shared.getAssetImage(name: otherDetailEnum.iconName, height: 15, fit: BoxFit.fitHeight),
                   const SizedBox(width: 2),
-                  BaseText(text: otherDetailEnum.displayText, myFont: MyFont.rcRegular, fontSize: 17)
+                  BaseText(text: otherDetailEnum.displayText, myFont: MyFont.rcRegular, fontSize: 20)
                 ],
               ),
             ),
             const SizedBox(width: 5),
-            Expanded(child: BaseText(text: "-", myFont: MyFont.rcBold, fontSize: 15)),
+            Expanded(child: BaseText(text: getOtherDetailViewValue(otherDetailEnum), myFont: MyFont.rcBold, fontSize: 18)),
             Expanded(child: Container()),
           ],
         ),
@@ -322,12 +322,23 @@ extension on _DoctorDetailPageState {
     );
   }
 
+  String getOtherDetailViewValue(_OtherDetailEnum otherDetailEnum) {
+    switch(otherDetailEnum) {
+      case _OtherDetailEnum.day: return widget.model.getSeparatedDOB()?.item1 ?? "-";
+      case _OtherDetailEnum.month: return widget.model.getSeparatedDOB()?.item2 ?? "-";
+      case _OtherDetailEnum.year: return widget.model.getSeparatedDOB()?.item3 ?? "-";
+      default: return "-";
+    }
+  }
+
   void Function()? handleTapEventForOtherDetailView(_OtherDetailEnum otherDetailEnum) {
     if(isEdit) {
       if (otherDetailEnum == _OtherDetailEnum.day || otherDetailEnum == _OtherDetailEnum.month || otherDetailEnum == _OtherDetailEnum.year) {
         return (){
           GeneralUtility.shared.showDatePicker(completion: (DateTime? date){
-            print(date?.toFormattedString(DateFormat.ddmmyyyyDash));
+            setState(() {
+              widget.model.dob = date;
+            });
           });
         };
       }
