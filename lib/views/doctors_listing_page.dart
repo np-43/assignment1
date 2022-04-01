@@ -8,6 +8,7 @@ import 'package:assignment1/utilities/managers/font_enum.dart';
 import 'package:assignment1/views/doctor_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:assignment1/utilities/extensions/common_extensions.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class DoctorsListingPage extends StatefulWidget {
   const DoctorsListingPage({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class DoctorsListingPage extends StatefulWidget {
 class _DoctorsListingPageState extends State<DoctorsListingPage> {
 
   List<DoctorModel> listDoctorModel = [];
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -48,15 +50,24 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> {
       backgroundColor: ColorConst.white,
       body: Container(
         margin: const EdgeInsets.all(15),
-        child: ListView.separated(
-          shrinkWrap: true,
-          itemCount: listDoctorModel.length,
-          itemBuilder: (buildContext, index){
-            return getListCellView(listDoctorModel[index]);
+        child: SmartRefresher(
+          controller: _refreshController,
+          onRefresh: (){
+            prepareDoctorListingData(showProcessing: false, completion: (){
+              _refreshController.refreshCompleted();
+            });
           },
-          separatorBuilder: (buildContext, index){
-            return const Divider(height: 1, color: ColorConst.grey);
-          },
+          header: const MaterialClassicHeader(color: ColorConst.primary),
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: listDoctorModel.length,
+            itemBuilder: (buildContext, index){
+              return getListCellView(listDoctorModel[index]);
+            },
+            separatorBuilder: (buildContext, index){
+              return const Divider(height: 1, color: ColorConst.grey);
+            },
+          ),
         ),
       ),
     );
@@ -114,8 +125,10 @@ extension on _DoctorsListingPageState {
 
 extension on _DoctorsListingPageState {
 
-  prepareDoctorListingData() {
-    GeneralUtility.shared.showProcessing();
+  prepareDoctorListingData({bool showProcessing = true, void Function()? completion}) {
+    if(showProcessing){
+      GeneralUtility.shared.showProcessing();
+    }
     APIManager.shared.performCall(api: API.getDoctors, completion: (status, message, response){
       List<dynamic> list = response;
       listDoctorModel = list.map((e) => DoctorModel.fromJson(e)).toList();
@@ -123,7 +136,12 @@ extension on _DoctorsListingPageState {
         return (model2.rating?.toDouble() ?? 0).compareTo((model1.rating?.toDouble() ?? 0));
       });
       setState(() {});
-      GeneralUtility.shared.hideProcessing();
+      if(showProcessing) {
+        GeneralUtility.shared.hideProcessing();
+      }
+      if (completion != null) {
+        completion();
+      }
     });
   }
 
