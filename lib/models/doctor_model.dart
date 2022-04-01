@@ -60,6 +60,11 @@ class DoctorModel {
     return data;
   }
 
+  DoctorModel copy() {
+    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown);
+    return model;
+  }
+
 }
 
 extension ExtDoctorModel on DoctorModel {

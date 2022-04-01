@@ -68,7 +68,7 @@ extension on _DoctorsListingPageState {
   getListCellView(DoctorModel model) {
     return InkWell(
       onTap: (){
-        GeneralUtility.shared.push(context, DoctorDetailPage(model));
+        GeneralUtility.shared.push(context, DoctorDetailPage(model.copy()));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),

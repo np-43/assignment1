@@ -1,7 +1,6 @@
 import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/np_firebase_manager.dart';
 import 'package:assignment1/utilities/managers/shared_preference_manager.dart';
-import 'package:assignment1/views/doctors_listing_page.dart';
 import 'package:assignment1/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: navKey,
-      home: const DoctorsListingPage(),
+      home: const LoginPage(),
     );
   }
 }

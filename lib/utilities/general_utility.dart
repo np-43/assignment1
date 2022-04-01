@@ -2,6 +2,7 @@ import 'package:assignment1/constants/image_constant.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../base_classes/base_text.dart';
 import '../constants/color_constant.dart';
 import 'custom_controls/np_alert_dialog.dart';
@@ -175,6 +176,51 @@ extension ExtGeneralUtility2 on GeneralUtility {
           }
         });
       });
+    });
+  }
+
+  showDatePicker({DateTime? initialSelectedDate, required void Function(DateTime? selectedDate) completion}){
+    if (navKey.currentContext == null) {
+      return;
+    }
+    showDialog(context: navKey.currentContext!, barrierDismissible: false, builder: (dialogContext){
+      return Container(
+        color: Colors.black.withOpacity(0.5),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              child: SfDateRangePicker(
+                selectionColor: ColorConst.primary,
+                todayHighlightColor: ColorConst.primary,
+                initialSelectedDate: initialSelectedDate,
+                showNavigationArrow: true,
+                showTodayButton: true,
+                showActionButtons: true,
+                onCancel: (){
+                  Navigator.of(dialogContext).pop();
+                },
+                onSubmit: (obj){
+                  if (obj != null) {
+                    DateTime? selectedDate = obj as DateTime?;
+                    Navigator.of(dialogContext).pop();
+                    completion(selectedDate);
+                  } else {
+                    showSnackBar("Please select any date.");
+                  }
+                },
+                selectionMode: DateRangePickerSelectionMode.single,
+              ),
+            ),
+          ],
+        ),
+      );
     });
   }
 

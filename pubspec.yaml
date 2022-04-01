@@ -43,6 +43,7 @@ dependencies:
   pinput: ^2.2.5
   firebase_core: ^1.13.1
   firebase_auth: ^3.3.11
+  syncfusion_flutter_datepicker: ^19.4.56
 
 dev_dependencies:
   flutter_test:

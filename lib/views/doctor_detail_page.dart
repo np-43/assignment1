@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../base_classes/base_button.dart';
 import 'package:assignment1/utilities/extensions/common_extensions.dart';
-
+import 'package:assignment1/utilities/extensions/date_extension.dart';
 import '../constants/string_constant.dart';
 
 enum _PersonalDetailEnum { firstName, lastName, specialization, contactNumber, rating }
@@ -236,9 +236,9 @@ extension on _DoctorDetailPageState {
           ((isEdit) ? RatingBar.builder(
             itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.amber,),
             onRatingUpdate: (rating) {
-              // print(rating);
               widget.model.rating = "$rating";
             },
+            allowHalfRating: true,
             initialRating: getPersonDetail(personalDetailEnum).toDouble() ?? 1,
             itemCount: 5,
             direction: Axis.horizontal,
@@ -280,32 +280,50 @@ extension on _DoctorDetailPageState {
   }
 
   Widget otherDetailGridView(_OtherDetailEnum otherDetailEnum) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(width: 1, color: ColorConst.grey),
-          borderRadius: BorderRadius.circular(5),
-          color: ColorConst.white
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(child: Container()),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GeneralUtility.shared.getAssetImage(name: otherDetailEnum.iconName, height: 15, fit: BoxFit.fitHeight),
-                const SizedBox(width: 2),
-                BaseText(text: otherDetailEnum.displayText, myFont: MyFont.rcRegular, fontSize: 17)
-              ],
+    return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: handleTapEventForOtherDetailView(otherDetailEnum),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(width: 1, color: ColorConst.grey),
+            borderRadius: BorderRadius.circular(5),
+            color: ColorConst.white
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(child: Container()),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GeneralUtility.shared.getAssetImage(name: otherDetailEnum.iconName, height: 15, fit: BoxFit.fitHeight),
+                  const SizedBox(width: 2),
+                  BaseText(text: otherDetailEnum.displayText, myFont: MyFont.rcRegular, fontSize: 17)
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 5),
-          Expanded(child: BaseText(text: "-", myFont: MyFont.rcBold, fontSize: 15)),
-          Expanded(child: Container()),
-        ],
+            const SizedBox(width: 5),
+            Expanded(child: BaseText(text: "-", myFont: MyFont.rcBold, fontSize: 15)),
+            Expanded(child: Container()),
+          ],
+        ),
       ),
     );
+  }
+
+  void Function()? handleTapEventForOtherDetailView(_OtherDetailEnum otherDetailEnum) {
+    if(isEdit) {
+      if (otherDetailEnum == _OtherDetailEnum.day || otherDetailEnum == _OtherDetailEnum.month || otherDetailEnum == _OtherDetailEnum.year) {
+        return (){
+          GeneralUtility.shared.showDatePicker(completion: (DateTime? date){
+            print(date?.toFormattedString(DateFormat.ddmmyyyyDash));
+          });
+        };
+      }
+    }
+    return null;
   }
 
 }

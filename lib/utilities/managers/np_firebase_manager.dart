@@ -37,11 +37,12 @@ extension ExtNPFirebaseManager on NPFirebaseManager {
           print("verfiy completed");
           print(phoneAuthCredential.smsCode ?? "");
           code = phoneAuthCredential.smsCode;
-          completion(true);
+          // completion(true);
         },
         verificationFailed: (FirebaseAuthException error) {
           print("verfiy failed");
           print(error.message ?? "");
+          GeneralUtility.shared.showSnackBar(StringConst.mobileValidationMsg);
           completion(false);
         },
         codeSent: (String verificationId, int? forceResendingToken) {
@@ -54,7 +55,7 @@ extension ExtNPFirebaseManager on NPFirebaseManager {
           print("code auto retrieval timeout");
           print(verificationId);
           verificationID = verificationId;
-          completion(true);
+          // completion(true);
         }
     );
   }
