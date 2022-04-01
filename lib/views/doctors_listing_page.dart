@@ -17,7 +17,13 @@ class DoctorsListingPage extends StatefulWidget {
   State<DoctorsListingPage> createState() => _DoctorsListingPageState();
 }
 
-class _DoctorsListingPageState extends State<DoctorsListingPage> {
+class _DoctorsListingPageState extends State<DoctorsListingPage> with SingleTickerProviderStateMixin {
+
+  bool isGrid = false;
+  late AnimationController _animationController;
+  late Animation<Color?> _animateColor;
+  late Animation<double> _animateIcon;
+  final Curve _curve = Curves.easeOut;
 
   List<DoctorModel> listDoctorModel = [];
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
@@ -25,13 +31,58 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> {
   @override
   void initState() {
     // TODO: implement initState
+    _animationController =
+    AnimationController(vsync: this, duration: const Duration(milliseconds: 500))
+      ..addListener(() {
+        setState(() {});
+      });
+    _animateIcon = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animateColor = ColorTween(
+      begin: ColorConst.primaryDark,
+      end: ColorConst.primaryDark,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.00,
+        1.00,
+        curve: _curve,
+      ),
+    ));
     super.initState();
     prepareDoctorListingData();
   }
 
   @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  animate() {
+    if (!isGrid) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    isGrid = !isGrid;
+  }
+
+  Widget toggle() {
+    return FloatingActionButton(
+      backgroundColor: _animateColor.value,
+      onPressed: animate,
+      tooltip: 'Toggle',
+      child: AnimatedIcon(
+        icon: AnimatedIcons.list_view,
+        progress: _animateIcon,
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: toggle(),
       appBar: AppBar(
         backgroundColor: ColorConst.white,
         title: GeneralUtility.shared.getAssetImage(name: ImageConst.icDoctorBima, height: 50, fit: BoxFit.fitHeight),
@@ -58,16 +109,7 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> {
             });
           },
           header: const MaterialClassicHeader(color: ColorConst.primary),
-          child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: listDoctorModel.length,
-            itemBuilder: (buildContext, index){
-              return getListCellView(listDoctorModel[index]);
-            },
-            separatorBuilder: (buildContext, index){
-              return const Divider(height: 1, color: ColorConst.grey);
-            },
-          ),
+          child: (isGrid) ? getGridView() : getListView(),
         ),
       ),
     );
@@ -75,6 +117,19 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> {
 }
 
 extension on _DoctorsListingPageState {
+
+  Widget getListView() {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: listDoctorModel.length,
+      itemBuilder: (buildContext, index){
+        return getListCellView(listDoctorModel[index]);
+      },
+      separatorBuilder: (buildContext, index){
+        return const Divider(height: 1, color: ColorConst.grey);
+      },
+    );
+  }
 
   getListCellView(DoctorModel model) {
     return InkWell(
@@ -115,6 +170,68 @@ extension on _DoctorsListingPageState {
               ),
             ),
             const Icon(Icons.chevron_right)
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+
+extension on _DoctorsListingPageState {
+
+  Widget getGridView() {
+    return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.25, mainAxisSpacing: 15, crossAxisSpacing: 15),
+        itemCount: listDoctorModel.length,
+        itemBuilder: (buildContext, index){
+          return getGridCellView(listDoctorModel[index]);
+        }
+    );
+  }
+
+  getGridCellView(DoctorModel model) {
+    return InkWell(
+      onTap: (){
+        GeneralUtility.shared.push(context, DoctorDetailPage(model.copy()));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: ColorConst.grey, width: 1),
+            borderRadius: BorderRadius.circular(5)
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        height: 90,
+        width: GeneralUtility.shared.getScreenSize(context).width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: ColorConst.grey, width: 1),
+                  borderRadius: BorderRadius.circular(25)
+              ),
+              height: 50,
+              width: 50,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: GeneralUtility.shared.getNetworkImage(url: model.profilePic, fit: BoxFit.fill)
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BaseText(textAlignment: TextAlign.center, text: model.fullName, color: ColorConst.primary, myFont: MyFont.rBold, fontSize: 17,),
+                  const SizedBox(height: 5),
+                  BaseText(textAlignment: TextAlign.center, text: model.specialization?.toUpperCase() ?? "", color: ColorConst.primary, fontSize: 15,),
+                  const SizedBox(height: 5),
+                  BaseText(textAlignment: TextAlign.justify, text: model.description ?? "", color: ColorConst.grey, textOverflow: TextOverflow.ellipsis, numberOfLines: 5, fontSize: 14,),
+                ],
+              ),
+            ),
           ],
         ),
       ),

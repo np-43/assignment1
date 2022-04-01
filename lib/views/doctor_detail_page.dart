@@ -239,7 +239,7 @@ extension on _DoctorDetailPageState {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           BaseText(text: personalDetailEnum.displayText, color: ColorConst.grey, myFont: MyFont.rcBold, fontSize: 18, textAlignment: TextAlign.left,),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           (personalDetailEnum == _PersonalDetailEnum.rating) ?
           ((isEdit) ? RatingBar.builder(
             itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.amber,),
@@ -262,6 +262,7 @@ extension on _DoctorDetailPageState {
           ((isEdit) ? SizedBox(
               height: 30,
               child: BaseTextField(
+                readOnly: !personalDetailEnum.isEditable,
                 controller: mapController[personalDetailEnum.value],
                 textColor: ColorConst.black,
                 borderColor: Colors.transparent,

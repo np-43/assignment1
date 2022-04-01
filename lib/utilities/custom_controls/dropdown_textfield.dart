@@ -28,8 +28,8 @@ class DropdownTextField extends StatefulWidget {
   final void Function(DropdownOptionModel) onChange;
   final void Function()? onClear;
 
-  DropdownTextField(
-      {required this.dataList,
+  const DropdownTextField(
+      {Key? key, required this.dataList,
         required this.controller,
         this.validator,
         this.isValid = true,
@@ -39,7 +39,7 @@ class DropdownTextField extends StatefulWidget {
         this.textColor = ColorConst.black,
         required this.hintText,
         required this.onChange,
-        this.onClear});
+        this.onClear}) : super(key: key);
 
   @override
   _DropdownTextFieldState createState() => _DropdownTextFieldState();
