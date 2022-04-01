@@ -1,7 +1,9 @@
 import 'package:assignment1/constants/image_constant.dart';
+import 'package:assignment1/constants/string_constant.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../base_classes/base_text.dart';
 import '../constants/color_constant.dart';
@@ -9,6 +11,7 @@ import 'custom_controls/np_alert_dialog.dart';
 import 'custom_controls/np_loader_dialog.dart';
 import 'managers/font_enum.dart';
 import 'extensions/common_extensions.dart';
+import 'managers/np_image_picker.dart';
 
 class GeneralUtility {
 
@@ -89,7 +92,7 @@ extension ExtGeneralUtility1 on GeneralUtility {
 
   getNoDataView({String? message}) {
     return Center(
-      child:  BaseText(text: message ?? "No data found", color: ColorConst.black, fontSize: 20,),
+      child:  BaseText(text: message ?? StringConst.noDataFound, color: ColorConst.black, fontSize: 20,),
     );
   }
 
@@ -191,7 +194,8 @@ extension ExtGeneralUtility2 on GeneralUtility {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+              width: 300,
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -222,6 +226,42 @@ extension ExtGeneralUtility2 on GeneralUtility {
         ),
       );
     });
+  }
+
+  showImagePicker({bool withRemoveOption = true, required void Function(ImagePickType, XFile?)? imagePickType}) {
+    if (navKey.currentContext == null){
+      return;
+    }
+    showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              topLeft: Radius.circular(10),
+            )
+        ),
+        backgroundColor: Colors.white,
+        context: navKey.currentContext!,
+        builder: (context) {
+          return NPImagePicker(completion: imagePickType);
+        });
+  }
+
+}
+
+extension ExtGeneralUtility3 on GeneralUtility {
+
+  Future<XFile?> imageFromCamera() async {
+    XFile? image = await ImagePicker().pickImage(
+        source: ImageSource.camera, imageQuality: 50
+    );
+    return image;
+  }
+
+  Future<XFile?> imageFromGallery() async {
+    XFile? image = await  ImagePicker().pickImage(
+        source: ImageSource.gallery, imageQuality: 50
+    );
+    return image;
   }
 
 }

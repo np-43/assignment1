@@ -35,4 +35,12 @@ class StringConst {
   static const String height = "HEIGHT";
   static const String weight = "WEIGHT";
 
+  //Camera or gallery
+  static const String remove = "Remove";
+  static const String takePhoto = "Take Photo";
+  static const String chooseFromLibrary = "Choose from library";
+
+  // Common Error Messages
+  static const String noDataFound = "No data found";
+
 }

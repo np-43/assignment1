@@ -64,9 +64,9 @@ extension on _OtherDetailEnum {
 
 class DoctorDetailPage extends StatefulWidget {
 
-  DoctorModel model;
+  final DoctorModel model;
 
-  DoctorDetailPage(this.model, {Key? key}) : super(key: key);
+  const DoctorDetailPage(this.model, {Key? key}) : super(key: key);
 
   @override
   State<DoctorDetailPage> createState() => _DoctorDetailPageState();
@@ -164,16 +164,24 @@ extension on _DoctorDetailPageState {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: ColorConst.white, width: 2),
-                      borderRadius: BorderRadius.circular(40)
-                  ),
-                  height: 80,
-                  width: 80,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: GeneralUtility.shared.getNetworkImage(url: widget.model.profilePic, fit: BoxFit.fill)
+                InkResponse(
+                  onTap: (isEdit) ?
+                  (){
+                    GeneralUtility.shared.showImagePicker(imagePickType: (imagePickType, xFile){
+                      print(xFile?.path);
+                    });
+                  } : null,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: ColorConst.white, width: 2),
+                        borderRadius: BorderRadius.circular(40)
+                    ),
+                    height: 80,
+                    width: 80,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: GeneralUtility.shared.getNetworkImage(url: widget.model.profilePic, fit: BoxFit.fill)
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -252,7 +260,7 @@ extension on _DoctorDetailPageState {
           )
           ) :
           ((isEdit) ? SizedBox(
-              height: 25,
+              height: 30,
               child: BaseTextField(
                 controller: mapController[personalDetailEnum.value],
                 textColor: ColorConst.black,
