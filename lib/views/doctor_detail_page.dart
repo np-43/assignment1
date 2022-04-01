@@ -4,6 +4,7 @@ import 'package:assignment1/constants/color_constant.dart';
 import 'package:assignment1/constants/image_constant.dart';
 import 'package:assignment1/models/doctor_model.dart';
 import 'package:assignment1/utilities/general_utility.dart';
+import 'package:assignment1/utilities/managers/database_manager.dart';
 import 'package:assignment1/utilities/managers/font_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -189,7 +190,11 @@ extension on _DoctorDetailPageState {
                 const SizedBox(height: 10),
                 SizedBox(
                   height: 30,
-                  child: BaseMaterialButton(StringConst.editProfile, (){
+                  child: BaseMaterialButton(StringConst.editProfile, () async {
+                    if(isEdit == true) {
+                      prepareModel();
+                      await DatabaseManager.shared.updateDoctor(widget.model);
+                    }
                     isEdit = !isEdit;
                     print(mapController.entries.toList());
                   }, buttonColor: ColorConst.buttonBG, verticalPadding: 0, horizontalPadding: 20, fontSize: 17,),
@@ -344,6 +349,12 @@ extension on _DoctorDetailPageState {
       }
     }
     return null;
+  }
+
+  prepareModel() {
+    widget.model.firstName = mapController[_PersonalDetailEnum.firstName.value]?.text;
+    widget.model.lastName = mapController[_PersonalDetailEnum.lastName.value]?.text;
+    widget.model.specialization = mapController[_PersonalDetailEnum.specialization.value]?.text;
   }
 
 }

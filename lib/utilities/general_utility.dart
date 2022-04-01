@@ -58,9 +58,14 @@ extension ExtGeneralUtility1 on GeneralUtility {
     );
   }
 
-  push(BuildContext context, Widget page, {int delay = 1}) {
+  push(BuildContext context, Widget page, {int delay = 1, void Function()? onPop}) {
     Future.delayed(Duration(microseconds: delay), (){
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => page)).then((value) {
+        print("Popped");
+        if(onPop != null) {
+          onPop();
+        }
+      });
     });
   }
 

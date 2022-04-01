@@ -71,6 +71,12 @@ extension ExtDatabaseManager1 on DatabaseManager {
     batch.commit().then((value) => completion());
   }
 
+  updateDoctor(DoctorModel model) async {
+    model.isEdited = true;
+    var res = await _database.update("Doctor", model.toJson(), where: "id = ?", whereArgs: [model.id]);
+    return res;
+  }
+
   getAllDoctorIDs(void Function(List<int>) completion) {
     _database.rawQuery("SELECT id FROM Doctor").then((value) {
       List<int> list = value.map((e) => e["id"].toString().toInt() ?? 0).toList();

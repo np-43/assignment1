@@ -142,7 +142,11 @@ extension on _DoctorsListingPageState {
   getListCellView(DoctorModel model) {
     return InkWell(
       onTap: (){
-        GeneralUtility.shared.push(context, DoctorDetailPage(model.copy()));
+        GeneralUtility.shared.push(context, DoctorDetailPage(model.copy()), onPop: (){
+          _fetchDataFromDB(completion: (){
+            setState(() {});
+          });
+        });
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -201,7 +205,11 @@ extension on _DoctorsListingPageState {
   getGridCellView(DoctorModel model) {
     return InkWell(
       onTap: (){
-        GeneralUtility.shared.push(context, DoctorDetailPage(model.copy()));
+        GeneralUtility.shared.push(context, DoctorDetailPage(model.copy()), onPop: (){
+          _fetchDataFromDB(completion: (){
+            setState(() {});
+          });
+        });
       },
       child: Container(
         decoration: BoxDecoration(
@@ -259,7 +267,7 @@ extension on _DoctorsListingPageState {
         List<DoctorModel> filtered = list.where((element) => insertingIDs.contains(element.id)).toList();
         print("Filtered IDs: ${filtered.map((e) => e.id ?? 0)}");
         DatabaseManager.shared.insertDoctors(filtered, () {
-          _fetchDataFromDB(completion: (doctors) {
+          _fetchDataFromDB(completion: () {
             setState(() {});
             if(completion != null) {
               completion();
@@ -286,13 +294,13 @@ extension on _DoctorsListingPageState {
     });
   }
 
-  _fetchDataFromDB({required void Function(List<DoctorModel>) completion}) {
+  _fetchDataFromDB({required void Function() completion}) {
     DatabaseManager.shared.getAllDoctors().then((value) {
       listDoctorModel = value;
       listDoctorModel.sort((model1, model2) {
         return (model2.rating?.toDouble() ?? 0).compareTo((model1.rating?.toDouble() ?? 0));
       });
-      completion(value);
+      completion();
     });
   }
 
