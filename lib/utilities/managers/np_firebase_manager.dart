@@ -1,4 +1,6 @@
 import 'package:assignment1/utilities/general_utility.dart';
+import 'package:assignment1/utilities/managers/shared_preference_manager.dart';
+import 'package:assignment1/views/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -69,7 +71,11 @@ extension ExtNPFirebaseManager on NPFirebaseManager {
       _auth.signInWithCredential(credential).then((value) {
         user = value.user;
         print("UID: ${user?.uid ?? ""}");
+        SharedPrefsManager.shared.setString(value: user?.uid ?? "", spKey: SPKey.uid);
         completion(true);
+      }).catchError((error){
+        GeneralUtility.shared.showSnackBar(StringConst.invalidOTP);
+        completion(false);
       });
     } catch (e) {
       GeneralUtility.shared.showSnackBar(StringConst.invalidOTP);
@@ -79,6 +85,8 @@ extension ExtNPFirebaseManager on NPFirebaseManager {
 
   void signOut() {
     _auth.signOut();
+    SharedPrefsManager.shared.clearAll();
+    GeneralUtility.shared.pushAndRemove(navKey.currentContext!, const LoginPage());
   }
 
 }

@@ -61,7 +61,9 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
               GeneralUtility.shared.showProcessing(isFromInitState: false);
               NPFirebaseManager.shared.signInWithPhoneNumber(otp, (status){
                 GeneralUtility.shared.hideProcessing(isFromInitState: false);
-                GeneralUtility.shared.pushAndRemove(context, const DoctorsListingPage());
+                if(status) {
+                  GeneralUtility.shared.pushAndRemove(context, const DoctorsListingPage());
+                }
               });
             } : null,
             buttonColor: ColorConst.buttonBG,),

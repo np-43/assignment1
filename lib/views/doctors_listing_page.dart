@@ -6,6 +6,7 @@ import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/api_manager.dart';
 import 'package:assignment1/utilities/managers/database_manager.dart';
 import 'package:assignment1/utilities/managers/font_enum.dart';
+import 'package:assignment1/utilities/managers/np_firebase_manager.dart';
 import 'package:assignment1/views/doctor_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:assignment1/utilities/extensions/common_extensions.dart';
@@ -74,7 +75,7 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> with SingleTick
       onPressed: animate,
       tooltip: 'Toggle',
       child: AnimatedIcon(
-        icon: AnimatedIcons.list_view,
+        icon: AnimatedIcons.view_list,
         progress: _animateIcon,
       ),
     );
@@ -91,7 +92,13 @@ class _DoctorsListingPageState extends State<DoctorsListingPage> with SingleTick
           GeneralUtility.shared.getAssetImage(name: ImageConst.icBimaLogo)
         ],
         leading: IconButton(
-          onPressed: (){},
+          onPressed: (){
+            GeneralUtility.shared.showAlert(title: "Sign Out", message: "Are you sure you want to Sign out?", listActions: [AlertAction.yes, AlertAction.no], completion: (alertAction) {
+              if(alertAction == AlertAction.yes) {
+                NPFirebaseManager.shared.signOut();
+              }
+            });
+          },
           icon: const Icon(Icons.menu),
           color: ColorConst.primary,
           splashColor: Colors.transparent,

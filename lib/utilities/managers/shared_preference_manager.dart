@@ -1,10 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum SPKey { token }
+enum SPKey { token, uid }
 extension on SPKey {
   String get value {
     switch(this) {
       case SPKey.token: return "token";
+      case SPKey.uid: return "uid";
     }
   }
 }
