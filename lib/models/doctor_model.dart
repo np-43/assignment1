@@ -17,6 +17,7 @@ class DoctorModel {
   String? languagesKnown;
 
   DateTime? dob;
+  bool isEdited = false;
 
   DoctorModel({
     this.id,
@@ -31,7 +32,8 @@ class DoctorModel {
     this.description,
     this.specialization,
     this.languagesKnown,
-    this.dob
+    this.dob,
+    this.isEdited = false,
   });
 
   DoctorModel.fromJson(Map<String, dynamic> json) {
@@ -39,7 +41,7 @@ class DoctorModel {
     firstName = json['first_name'];
     lastName = json['last_name'];
     profilePic = json['profile_pic'];
-    favorite = json['favorite'];
+    favorite = (((json['favorite'] ?? 0) == 1 || json['favorite'] == true) ? true : false);
     primaryContactNo = json['primary_contact_no'];
     rating = json['rating'];
     emailAddress = json['email_address'];
@@ -47,6 +49,8 @@ class DoctorModel {
     description = json['description'];
     specialization = json['specialization'];
     languagesKnown = json['languagesKnown'];
+    dob = ExtDateTime.getDateTime(inputString: json['dob'], dateFormat: DateFormat.ddmmmmyyyyDash);
+    isEdited = ((json['is_edited'] ?? 0) == 1 ? true : false);
   }
 
   Map<String, dynamic> toJson() {
@@ -55,7 +59,7 @@ class DoctorModel {
     data['first_name'] = firstName;
     data['last_name'] = lastName;
     data['profile_pic'] = profilePic;
-    data['favorite'] = favorite;
+    data['favorite'] = (favorite == true) ? 1 : 0;
     data['primary_contact_no'] = primaryContactNo;
     data['rating'] = rating;
     data['email_address'] = emailAddress;
@@ -63,11 +67,13 @@ class DoctorModel {
     data['description'] = description;
     data['specialization'] = specialization;
     data['languagesKnown'] = languagesKnown;
+    data['dob'] = dob?.toFormattedString(DateFormat.ddmmmmyyyyDash);
+    data['is_edited'] = (isEdited == true) ? 1 : 0;
     return data;
   }
 
   DoctorModel copy() {
-    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown, dob: dob);
+    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown, dob: dob, isEdited: isEdited);
     return model;
   }
 

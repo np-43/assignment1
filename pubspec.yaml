@@ -47,6 +47,8 @@ dependencies:
   pull_to_refresh: ^2.0.0
   image_picker: ^0.8.4+11
   tuple: ^2.0.0
+  sqflite: ^2.0.2
+  path_provider: ^2.0.9
 
 dev_dependencies:
   flutter_test:

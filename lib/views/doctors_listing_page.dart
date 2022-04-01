@@ -4,6 +4,7 @@ import 'package:assignment1/constants/image_constant.dart';
 import 'package:assignment1/models/doctor_model.dart';
 import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/api_manager.dart';
+import 'package:assignment1/utilities/managers/database_manager.dart';
 import 'package:assignment1/utilities/managers/font_enum.dart';
 import 'package:assignment1/views/doctor_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -243,22 +244,48 @@ extension on _DoctorsListingPageState {
 extension on _DoctorsListingPageState {
 
   prepareDoctorListingData({bool showProcessing = true, void Function()? completion}) {
+    DatabaseManager.shared.getAllDoctorIDs((insertedIDs){
+      print("Inserted IDs: $insertedIDs");
+      _fetchDataFromAPI(showProcessing: showProcessing, completion: (list){
+        List<int> insertingIDs = list.where((element) => !(insertedIDs.contains(element.id))).map((e) => e.id ?? 0).toList();
+        print("Inserting IDs: $insertingIDs");
+        List<DoctorModel> filtered = list.where((element) => insertingIDs.contains(element.id)).toList();
+        print("Filtered IDs: ${filtered.map((e) => e.id ?? 0)}");
+        DatabaseManager.shared.insertDoctors(filtered, () {
+          _fetchDataFromDB(completion: (doctors) {
+            setState(() {});
+            if(completion != null) {
+              completion();
+            }
+          });
+        },);
+      });
+    });
+  }
+
+  _fetchDataFromAPI({bool showProcessing = true, void Function(List<DoctorModel>)? completion}) {
     if(showProcessing){
       GeneralUtility.shared.showProcessing();
     }
     APIManager.shared.performCall(api: API.getDoctors, completion: (status, message, response){
       List<dynamic> list = response;
-      listDoctorModel = list.map((e) => DoctorModel.fromJson(e)).toList();
-      listDoctorModel.sort((model1, model2) {
-        return (model2.rating?.toDouble() ?? 0).compareTo((model1.rating?.toDouble() ?? 0));
-      });
-      setState(() {});
+      List<DoctorModel> listDoctorModel = list.map((e) => DoctorModel.fromJson(e)).toList();
       if(showProcessing) {
         GeneralUtility.shared.hideProcessing();
       }
       if (completion != null) {
-        completion();
+        completion(listDoctorModel);
       }
+    });
+  }
+
+  _fetchDataFromDB({required void Function(List<DoctorModel>) completion}) {
+    DatabaseManager.shared.getAllDoctors().then((value) {
+      listDoctorModel = value;
+      listDoctorModel.sort((model1, model2) {
+        return (model2.rating?.toDouble() ?? 0).compareTo((model1.rating?.toDouble() ?? 0));
+      });
+      completion(value);
     });
   }
 
