@@ -244,7 +244,7 @@ extension on _DoctorsListingPageState {
                   const SizedBox(height: 5),
                   BaseText(textAlignment: TextAlign.center, text: model.specialization?.toUpperCase() ?? "", color: ColorConst.primary, fontSize: 15,),
                   const SizedBox(height: 5),
-                  BaseText(textAlignment: TextAlign.justify, text: model.description ?? "", color: ColorConst.grey, textOverflow: TextOverflow.ellipsis, numberOfLines: 5, fontSize: 14,),
+                  Expanded(child: BaseText(textAlignment: TextAlign.justify, text: model.description ?? "", color: ColorConst.grey, textOverflow: TextOverflow.ellipsis, numberOfLines: 5, fontSize: 14,)),
                 ],
               ),
             ),
