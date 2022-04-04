@@ -277,10 +277,9 @@ extension on _DoctorDetailPageState {
             itemSize: 25,
           )
           ) :
-          ((isEdit) ? SizedBox(
+          ((isEdit && personalDetailEnum.isEditable) ? SizedBox(
               height: 30,
               child: BaseTextField(
-                readOnly: !personalDetailEnum.isEditable,
                 controller: mapController[personalDetailEnum.value],
                 textColor: ColorConst.black,
                 borderColor: Colors.transparent,
