@@ -9,6 +9,7 @@ class DoctorModel {
   String? firstName;
   String? lastName;
   String? profilePic;
+  String? profilePicLocal;
   bool? favorite;
   String? primaryContactNo;
   String? rating;
@@ -26,6 +27,7 @@ class DoctorModel {
     this.firstName,
     this.lastName,
     this.profilePic,
+    this.profilePicLocal,
     this.favorite,
     this.primaryContactNo,
     this.rating,
@@ -43,6 +45,7 @@ class DoctorModel {
     firstName = json['first_name'];
     lastName = json['last_name'];
     profilePic = json['profile_pic'];
+    profilePicLocal = json['profile_pic_local'];
     favorite = (((json['favorite'] ?? 0) == 1 || json['favorite'] == true) ? true : false);
     primaryContactNo = json['primary_contact_no'];
     rating = json['rating'];
@@ -61,6 +64,7 @@ class DoctorModel {
     data['first_name'] = firstName;
     data['last_name'] = lastName;
     data['profile_pic'] = profilePic;
+    data['profile_pic_local'] = profilePicLocal;
     data['favorite'] = (favorite == true) ? 1 : 0;
     data['primary_contact_no'] = primaryContactNo;
     data['rating'] = rating;
@@ -75,7 +79,7 @@ class DoctorModel {
   }
 
   DoctorModel copy() {
-    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown, dob: dob, isEdited: isEdited);
+    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, profilePicLocal: profilePicLocal, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown, dob: dob, isEdited: isEdited);
     return model;
   }
 
@@ -108,8 +112,8 @@ extension ExtDoctorModel on DoctorModel {
   }
 
   Image getImage() {
-    if(isEdited) {
-      return GeneralUtility.shared.getBase64Image(base64String: profilePic, fit: BoxFit.fill);
+    if (!(profilePicLocal?.isSpaceEmpty() ?? true)) {
+      return GeneralUtility.shared.getBase64Image(base64String: profilePicLocal, fit: BoxFit.fill);
     } else {
       return GeneralUtility.shared.getNetworkImage(url: profilePic, fit: BoxFit.fill);
     }

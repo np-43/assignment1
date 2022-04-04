@@ -40,6 +40,7 @@ extension on DatabaseManager {
         "first_name TEXT,"
         "last_name TEXT,"
         "profile_pic TEXT,"
+        "profile_pic_local TEXT,"
         "favorite INTEGER,"
         "primary_contact_no TEXT,"
         "rating TEXT,"

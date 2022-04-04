@@ -173,7 +173,7 @@ extension on _DoctorDetailPageState {
                       Uint8List? data = await xFile?.readAsBytes();
                       String? base64Img = ExtString.getBase64(data);
                       if(!(base64Img?.isSpaceEmpty() ?? true)) {
-                        widget.model.profilePic = base64Img;
+                        widget.model.profilePicLocal = base64Img;
                         setState(() {});
                       }
                     });
