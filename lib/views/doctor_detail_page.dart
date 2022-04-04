@@ -101,25 +101,19 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: ColorConst.primaryDark,
       body: SafeArea(
-        child: Column(
+        child: ListView(
+          // shrinkWrap: true,
+          // physics: const NeverScrollableScrollPhysics(),
           children: [
             headerView(),
-            bodyView(),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                color: ColorConst.bgWhite,
-                child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 4/3, mainAxisSpacing: 10, crossAxisSpacing: 10),
-                    itemCount: _OtherDetailEnum.values.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (buildContext, index){
-                      return otherDetailGridView(_OtherDetailEnum.values[index]);
-                    }
-                ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  bodyView(),
+                  bottomView(),
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -214,22 +208,35 @@ extension on _DoctorDetailPageState {
   }
 
   bodyView() {
-    return Expanded(
-      child: Container(
-        color: ColorConst.bgWhite,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 10),
-              BaseText(text: StringConst.personalDetail, myFont: MyFont.rcBold,),
-              const SizedBox(height: 10),
-              Column(
-                children: _PersonalDetailEnum.values.map((e) => personalDetailCellView(e)).toList(),
-              ),
-            ],
+    return Container(
+      color: ColorConst.bgWhite,
+      child: ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          const SizedBox(height: 10),
+          BaseText(text: StringConst.personalDetail, myFont: MyFont.rcBold,),
+          const SizedBox(height: 10),
+          Column(
+            children: _PersonalDetailEnum.values.map((e) => personalDetailCellView(e)).toList(),
           ),
-        ),
+        ],
+      ),
+    );
+  }
+
+  bottomView() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      color: ColorConst.bgWhite,
+      child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 4/3, mainAxisSpacing: 0, crossAxisSpacing: 10),
+          itemCount: _OtherDetailEnum.values.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (buildContext, index){
+            return otherDetailGridView(_OtherDetailEnum.values[index]);
+          }
       ),
     );
   }
@@ -305,6 +312,7 @@ extension on _DoctorDetailPageState {
       highlightColor: Colors.transparent,
       onTap: handleTapEventForOtherDetailView(otherDetailEnum),
       child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
             border: Border.all(width: 1, color: ColorConst.grey),
             borderRadius: BorderRadius.circular(5),
