@@ -18,6 +18,7 @@ class DropdownOptionModel {
 class DropdownTextField extends StatefulWidget {
   final List<DropdownOptionModel>? dataList;
   final TextEditingController controller;
+  final double? customWidth;
   final String? Function(String?)? validator;
   final bool isValid;
   final bool? isDense;
@@ -31,6 +32,7 @@ class DropdownTextField extends StatefulWidget {
   const DropdownTextField(
       {Key? key, required this.dataList,
         required this.controller,
+        this.customWidth,
         this.validator,
         this.isValid = true,
         this.isDense,
@@ -58,7 +60,7 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
     var size = renderBox!.size;
     return OverlayEntry(
         builder: (context) => Positioned(
-          width: size.width,
+          width: widget.customWidth ?? size.width,
           child: CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
@@ -66,7 +68,7 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
             child: Material(
               child: ((widget.dataList?.length ?? 0) > 0) ? Container(
                 color: ColorConst.white,
-                height: (widget.dataList?.length ?? 0) <= 3 ? ((widget.dataList?.length ?? 0) * 40) : 160,
+                height: (widget.dataList?.length ?? 0) <= 5 ? ((widget.dataList?.length ?? 0) * 40) : (40 * 5),
                 child: Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   // color: ColorConst.grey,
@@ -89,7 +91,8 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
+                              Container(
+                                height: 40,
                                 padding: const EdgeInsets.only(left: 0.0, bottom: 5),
                                 child: BaseText(text: element.name, color: ColorConst.primary, fontSize: 18, myFont: MyFont.rRegular, letterSpacing: 0, textAlignment: TextAlign.left,),
                               ),

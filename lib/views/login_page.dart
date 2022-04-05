@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:assignment1/base_classes/base_button.dart';
 import 'package:assignment1/base_classes/base_text.dart';
 import 'package:assignment1/base_classes/base_textfield.dart';
@@ -9,6 +8,7 @@ import 'package:assignment1/utilities/extensions/common_extensions.dart';
 import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/font_enum.dart';
 import 'package:assignment1/views/otp_verification_page.dart';
+import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:assignment1/utilities/managers/np_firebase_manager.dart';
@@ -74,17 +74,15 @@ extension on _LoginPageState {
 
   bodyView() {
     return Expanded(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              mobileNumberView(),
-              const SizedBox(height: 10),
-              Expanded(child: BaseText(text: StringConst.numberDesc, color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            mobileNumberView(),
+            const SizedBox(height: 10),
+            Expanded(child: BaseText(text: StringConst.numberDesc, color: ColorConst.white, fontSize: 14, numberOfLines: 2,)),
+          ],
         )
     );
   }
@@ -102,6 +100,7 @@ extension on _LoginPageState {
                   myFont: MyFont.rcBold,
                   dataList: countryCodeDropdownData,
                   controller: countryCodeController,
+                  customWidth: (GeneralUtility.shared.getScreenSize(context).width * 0.75),
                   hintText: StringConst.countryCodePlaceHolder,
                   textColor: ColorConst.buttonBG,
                   onChange: (option){
@@ -149,13 +148,19 @@ extension on _LoginPageState {
 extension on _LoginPageState {
 
   prepareCountryCodeDropdownData() async {
-    String data = await DefaultAssetBundle.of(context).loadString("assets/jsons/country_code.json");
-    final List<dynamic> jsonResult = jsonDecode(data);
-    countryCodeDropdownData = jsonResult.map((e) => DropdownOptionModel(id: 0, name: e["dial_code"], value: e["dial_code"])).toList();
-    countryCodeDropdownData.sort((a, b) {
-      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+    await CountryCodes.init();
+    List<CountryDetails> list = CountryCodes.countryCodes().where((element) => element != null).map((e) => e!).toList();
+    final Locale? deviceLocale = CountryCodes.getDeviceLocale();
+    list.sort((a, b) {
+      return (a.dialCode ?? "").toLowerCase().compareTo((b.dialCode ?? "").toLowerCase());
     });
-    countryCodeController.text = countryCodeDropdownData.first.value ?? "";
+    countryCodeDropdownData = list.map((e) => DropdownOptionModel(id: 0, name: ("(${e.dialCode ?? ""}) " + (e.localizedName ?? e.name ?? "")), value: e.dialCode)).toList();
+    if(list.where((element) => element.alpha2Code == deviceLocale?.countryCode).toList().isNotEmpty) {
+      CountryDetails deviceCountryDetails = list.firstWhere((element) => element.alpha2Code == deviceLocale?.countryCode);
+      countryCodeController.text = countryCodeDropdownData.firstWhere((element) => element.name.contains(deviceCountryDetails.name ?? "")).value ?? "";
+    } else {
+      countryCodeController.text = countryCodeDropdownData.first.value ?? "";
+    }
     setState(() {});
   }
 

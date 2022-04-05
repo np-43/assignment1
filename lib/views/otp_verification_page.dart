@@ -53,7 +53,6 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             BaseText(text: StringConst.otpPageTitle, myFont: MyFont.rcBold, color: ColorConst.white,),
             bodyView(),
             BaseMaterialButton("Login", isAgree ? (){
-              print(otp);
               if(otp.length != 6) {
                 GeneralUtility.shared.showSnackBar(StringConst.otpInputValidationMsg);
                 return;

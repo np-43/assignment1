@@ -260,12 +260,9 @@ extension on _DoctorsListingPageState {
 
   prepareDoctorListingData({bool showProcessing = true, void Function()? completion}) {
     DatabaseManager.shared.getAllDoctorIDs((insertedIDs){
-      print("Inserted IDs: $insertedIDs");
       _fetchDataFromAPI(showProcessing: showProcessing, completion: (list){
         List<int> insertingIDs = list.where((element) => !(insertedIDs.contains(element.id))).map((e) => e.id ?? 0).toList();
-        print("Inserting IDs: $insertingIDs");
         List<DoctorModel> filtered = list.where((element) => insertingIDs.contains(element.id)).toList();
-        print("Filtered IDs: ${filtered.map((e) => e.id ?? 0)}");
         DatabaseManager.shared.insertDoctors(filtered, () {
           _fetchDataFromDB(completion: () {
             setState(() {});
