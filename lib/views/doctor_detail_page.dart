@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:assignment1/base_classes/base_text.dart';
 import 'package:assignment1/base_classes/base_textfield.dart';
 import 'package:assignment1/constants/color_constant.dart';
@@ -44,6 +43,14 @@ extension on _PersonalDetailEnum {
 
 enum _OtherDetailEnum { day, month, year, bloodGroup, height, weight }
 extension on _OtherDetailEnum {
+  int get value {
+    switch(this) {
+      case _OtherDetailEnum.bloodGroup: return 101;
+      case _OtherDetailEnum.height: return 102;
+      case _OtherDetailEnum.weight: return 103;
+      default: return 0;
+    }
+  }
   String get displayText {
     switch(this) {
       case _OtherDetailEnum.day: return StringConst.day;
@@ -346,7 +353,24 @@ extension on _DoctorDetailPageState {
               ),
             ),
             const SizedBox(width: 5),
-            Expanded(child: BaseText(text: getOtherDetailViewValue(otherDetailEnum), myFont: MyFont.rcBold, fontSize: 18)),
+            (isEdit && otherDetailEnum != _OtherDetailEnum.day && otherDetailEnum != _OtherDetailEnum.month && otherDetailEnum != _OtherDetailEnum.year) ?
+            Container(
+              padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+              height: 25,
+              width: 80,
+              child: BaseTextField(
+                controller: mapController[otherDetailEnum.value],
+                textColor: ColorConst.black,
+                borderColor: Colors.transparent,
+                myFont: MyFont.rMedium,
+                fontSize: 15,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 5),
+                textAlign: TextAlign.center,
+              ),
+            ) :
+            Expanded(
+                child: BaseText(text: getOtherDetailViewValue(otherDetailEnum), myFont: MyFont.rcBold, fontSize: 18)
+            ),
             Expanded(child: Container()),
           ],
         ),
