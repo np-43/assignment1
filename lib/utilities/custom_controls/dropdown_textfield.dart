@@ -18,6 +18,7 @@ class DropdownOptionModel {
 class DropdownTextField extends StatefulWidget {
   final List<DropdownOptionModel>? dataList;
   final TextEditingController controller;
+  final double? customWidth;
   final String? Function(String?)? validator;
   final bool isValid;
   final bool? isDense;
@@ -31,6 +32,7 @@ class DropdownTextField extends StatefulWidget {
   const DropdownTextField(
       {Key? key, required this.dataList,
         required this.controller,
+        this.customWidth,
         this.validator,
         this.isValid = true,
         this.isDense,
@@ -58,7 +60,7 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
     var size = renderBox!.size;
     return OverlayEntry(
         builder: (context) => Positioned(
-          width: size.width,
+          width: widget.customWidth ?? size.width,
           child: CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
