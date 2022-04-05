@@ -43,4 +43,8 @@ class StringConst {
   // Common Error Messages
   static const String noDataFound = "No data found";
 
+  // Common Text
+  static const String save = "SAVE";
+  static const String cancel = "CANCEL";
+
 }

@@ -190,14 +190,28 @@ extension on _DoctorDetailPageState {
                 const SizedBox(height: 10),
                 SizedBox(
                   height: 30,
-                  child: BaseMaterialButton(StringConst.editProfile, () async {
-                    if(isEdit == true) {
-                      prepareModel();
-                      await DatabaseManager.shared.updateDoctor(widget.model);
-                    }
-                    isEdit = !isEdit;
-                    print(mapController.entries.toList());
-                  }, buttonColor: ColorConst.buttonBG, verticalPadding: 0, horizontalPadding: 20, fontSize: 17,),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      BaseMaterialButton((isEdit == true) ? StringConst.save : StringConst.editProfile, () async {
+                        if(isEdit == true) {
+                          prepareModel();
+                          await DatabaseManager.shared.updateDoctor(widget.model);
+                        }
+                        isEdit = !isEdit;
+                        print(mapController.entries.toList());
+                      }, buttonColor: ColorConst.buttonBG, verticalPadding: 0, horizontalPadding: 20, fontSize: 17,),
+                      (isEdit == true) ? Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          BaseMaterialButton(StringConst.cancel, () {
+                            isEdit = false;
+                          }, buttonColor: ColorConst.buttonBG, verticalPadding: 0, horizontalPadding: 20, fontSize: 17,),
+                        ],
+                      ) : Container(),
+                    ],
+                  ),
                 ),
               ],
             ),
