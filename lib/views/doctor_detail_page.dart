@@ -118,11 +118,14 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           children: [
             headerView(),
             Expanded(
-              child: ListView(
-                children: [
-                  bodyView(),
-                  bottomView(),
-                ],
+              child: Container(
+                color: ColorConst.bgWhite,
+                child: ListView(
+                  children: [
+                    bodyView(),
+                    bottomView(),
+                  ],
+                ),
               ),
             ),
           ],
@@ -232,27 +235,23 @@ extension on _DoctorDetailPageState {
   }
 
   bodyView() {
-    return Container(
-      color: ColorConst.bgWhite,
-      child: ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          const SizedBox(height: 10),
-          BaseText(text: StringConst.personalDetail, myFont: MyFont.rcBold,),
-          const SizedBox(height: 10),
-          Column(
-            children: _PersonalDetailEnum.values.map((e) => personalDetailCellView(e)).toList(),
-          ),
-        ],
-      ),
+    return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        const SizedBox(height: 10),
+        BaseText(text: StringConst.personalDetail, myFont: MyFont.rcBold,),
+        const SizedBox(height: 10),
+        Column(
+          children: _PersonalDetailEnum.values.map((e) => personalDetailCellView(e)).toList(),
+        ),
+      ],
     );
   }
 
   bottomView() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      color: ColorConst.bgWhite,
       child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 4/3, mainAxisSpacing: 0, crossAxisSpacing: 10),
           itemCount: _OtherDetailEnum.values.length,
