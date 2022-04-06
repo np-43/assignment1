@@ -50,6 +50,9 @@ extension on DatabaseManager {
         "specialization TEXT,"
         "languagesKnown TEXT,"
         "dob TEXT,"
+        "blood_group TEXT,"
+        "height TEXT,"
+        "weight TEXT,"
         "is_edited INTEGER"
         ")");
   }

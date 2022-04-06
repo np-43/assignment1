@@ -25,6 +25,9 @@ class DropdownTextField extends StatefulWidget {
   final EdgeInsetsGeometry? contentPadding;
   final MyFont myFont;
   final Color textColor;
+  final Color? fillColor;
+  final bool showDropdownUp;
+  final TextAlign? textAlign;
   final String hintText;
   final void Function(DropdownOptionModel) onChange;
   final void Function()? onClear;
@@ -39,6 +42,9 @@ class DropdownTextField extends StatefulWidget {
         this.contentPadding,
         this.myFont = MyFont.rRegular,
         this.textColor = ColorConst.black,
+        this.fillColor,
+        this.showDropdownUp = false,
+        this.textAlign,
         required this.hintText,
         required this.onChange,
         this.onClear}) : super(key: key);
@@ -51,6 +57,8 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
 
   bool isDropdownVisible = false;
 
+  double itemHeight = 40;
+
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
 
@@ -58,17 +66,18 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
   OverlayEntry _createOverlayEntry() {
     RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     var size = renderBox!.size;
+    double height =  (widget.dataList?.length ?? 0) <= 5 ? ((widget.dataList?.length ?? 0) * itemHeight) : (itemHeight * 5);
     return OverlayEntry(
         builder: (context) => Positioned(
           width: widget.customWidth ?? size.width,
           child: CompositedTransformFollower(
             link: _layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0.0, size.height + 5.0),
+            offset: Offset(0.0, (widget.showDropdownUp) ? (size.height - height) : (size.height + 5.0)),
             child: Material(
               child: ((widget.dataList?.length ?? 0) > 0) ? Container(
                 color: ColorConst.white,
-                height: (widget.dataList?.length ?? 0) <= 5 ? ((widget.dataList?.length ?? 0) * 40) : (40 * 5),
+                height: height,
                 child: Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   // color: ColorConst.grey,
@@ -122,7 +131,8 @@ class _DropdownTextFieldState extends State<DropdownTextField> {
         validator: widget.validator,
         isDense: widget.isDense,
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        fillColor: Colors.transparent,
+        fillColor: widget.fillColor,
+        textAlign: widget.textAlign ?? TextAlign.start,
         suffixIcon: InkWell(
           child: const Icon(Icons.keyboard_arrow_down_sharp, color: ColorConst.grey, size: 20),
           onTap: (){

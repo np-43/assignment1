@@ -103,6 +103,7 @@ extension on _LoginPageState {
                   customWidth: (GeneralUtility.shared.getScreenSize(context).width * 0.75),
                   hintText: StringConst.countryCodePlaceHolder,
                   textColor: ColorConst.buttonBG,
+                  fillColor: Colors.transparent,
                   onChange: (option){
                     countryCodeController.text = option.value ?? "";
                   }

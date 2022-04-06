@@ -4,10 +4,12 @@ import 'package:assignment1/base_classes/base_textfield.dart';
 import 'package:assignment1/constants/color_constant.dart';
 import 'package:assignment1/constants/image_constant.dart';
 import 'package:assignment1/models/doctor_model.dart';
+import 'package:assignment1/utilities/custom_controls/dropdown_textfield.dart';
 import 'package:assignment1/utilities/general_utility.dart';
 import 'package:assignment1/utilities/managers/database_manager.dart';
 import 'package:assignment1/utilities/managers/font_enum.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../base_classes/base_button.dart';
 import 'package:assignment1/utilities/extensions/common_extensions.dart';
@@ -82,7 +84,7 @@ class DoctorDetailPage extends StatefulWidget {
 }
 
 class _DoctorDetailPageState extends State<DoctorDetailPage> {
-  
+
   bool _isEdit = false;
   bool get isEdit => _isEdit;
   set isEdit(bool value) {
@@ -91,30 +93,32 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
     });
   }
 
-  Map<int, TextEditingController> mapController = {};
+  final Map<int, TextEditingController> _mapController = {};
+  List<DropdownOptionModel> _bloodGroupDropdownOptionModelList = [];
 
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _PersonalDetailEnum.values.where((element) => element != _PersonalDetailEnum.rating).forEach((element) {
-      mapController[element.value] = TextEditingController(text: getPersonDetail(element));
+      _mapController[element.value] = TextEditingController(text: getPersonDetail(element));
     });
+    for (var element in _OtherDetailEnum.values) {
+      _mapController[element.value] = TextEditingController(text: getOtherDetailViewValue(element));
+    }
+    prepareBloodGroupDropdownOptionModelList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: ColorConst.primaryDark,
       body: SafeArea(
-        child: ListView(
-          // shrinkWrap: true,
-          // physics: const NeverScrollableScrollPhysics(),
+        child: Column(
           children: [
             headerView(),
-            SingleChildScrollView(
-              child: Column(
+            Expanded(
+              child: ListView(
                 children: [
                   bodyView(),
                   bottomView(),
@@ -300,7 +304,7 @@ extension on _DoctorDetailPageState {
           ((isEdit && personalDetailEnum.isEditable) ? SizedBox(
               height: 30,
               child: BaseTextField(
-                controller: mapController[personalDetailEnum.value],
+                controller: _mapController[personalDetailEnum.value],
                 textColor: ColorConst.black,
                 borderColor: Colors.transparent,
                 myFont: MyFont.rMedium,
@@ -356,19 +360,35 @@ extension on _DoctorDetailPageState {
             Container(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
               height: 25,
-              width: 80,
-              child: BaseTextField(
-                controller: mapController[otherDetailEnum.value],
+              width: 100,
+              child: (otherDetailEnum == _OtherDetailEnum.bloodGroup) ?
+              DropdownTextField(
+                  myFont: MyFont.rcBold,
+                  dataList: _bloodGroupDropdownOptionModelList,
+                  controller: _mapController[otherDetailEnum.value]!,
+                  hintText: "",
+                  textAlign: TextAlign.center,
+                  showDropdownUp: true,
+                  onChange: (option){
+                    _mapController[otherDetailEnum.value]?.text = option.value ?? "";
+                  }
+              ):
+              BaseTextField(
+                controller: _mapController[otherDetailEnum.value],
                 textColor: ColorConst.black,
                 borderColor: Colors.transparent,
                 myFont: MyFont.rMedium,
                 fontSize: 15,
                 contentPadding: const EdgeInsets.symmetric(horizontal: 5),
                 textAlign: TextAlign.center,
+                textInputType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*'))
+                ],
               ),
             ) :
             Expanded(
-                child: BaseText(text: getOtherDetailViewValue(otherDetailEnum), myFont: MyFont.rcBold, fontSize: 18)
+                child: BaseText(text: getOtherDetailViewValue(otherDetailEnum) ?? "-", myFont: MyFont.rcBold, fontSize: 18)
             ),
             Expanded(child: Container()),
           ],
@@ -377,12 +397,14 @@ extension on _DoctorDetailPageState {
     );
   }
 
-  String getOtherDetailViewValue(_OtherDetailEnum otherDetailEnum) {
+  String? getOtherDetailViewValue(_OtherDetailEnum otherDetailEnum) {
     switch(otherDetailEnum) {
-      case _OtherDetailEnum.day: return widget.model.getSeparatedDOB()?.item1 ?? "-";
-      case _OtherDetailEnum.month: return widget.model.getSeparatedDOB()?.item2 ?? "-";
-      case _OtherDetailEnum.year: return widget.model.getSeparatedDOB()?.item3 ?? "-";
-      default: return "-";
+      case _OtherDetailEnum.day: return widget.model.getSeparatedDOB()?.item1;
+      case _OtherDetailEnum.month: return widget.model.getSeparatedDOB()?.item2;
+      case _OtherDetailEnum.year: return widget.model.getSeparatedDOB()?.item3;
+      case _OtherDetailEnum.bloodGroup: return widget.model.bloodGroup;
+      case _OtherDetailEnum.height: return widget.model.height;
+      case _OtherDetailEnum.weight: return widget.model.weight;
     }
   }
 
@@ -402,9 +424,25 @@ extension on _DoctorDetailPageState {
   }
 
   prepareModel() {
-    widget.model.firstName = mapController[_PersonalDetailEnum.firstName.value]?.text;
-    widget.model.lastName = mapController[_PersonalDetailEnum.lastName.value]?.text;
-    widget.model.specialization = mapController[_PersonalDetailEnum.specialization.value]?.text;
+    widget.model.firstName = getValueFromController(_PersonalDetailEnum.firstName.value);
+    widget.model.lastName = getValueFromController(_PersonalDetailEnum.lastName.value);
+    widget.model.specialization = getValueFromController(_PersonalDetailEnum.specialization.value);
+    widget.model.bloodGroup = getValueFromController(_OtherDetailEnum.bloodGroup.value);
+    widget.model.height = getValueFromController(_OtherDetailEnum.height.value);
+    widget.model.weight = getValueFromController(_OtherDetailEnum.weight.value);
+  }
+
+  String? getValueFromController(int key){
+    String? value = _mapController[key]?.text;
+    if(value?.isSpaceEmpty() ?? true) {
+      return null;
+    }
+    return value;
+  }
+
+  prepareBloodGroupDropdownOptionModelList() {
+    List<String> list = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+    _bloodGroupDropdownOptionModelList = list.map((e) => DropdownOptionModel(id: 0, name: e, value: e)).toList();
   }
 
 }

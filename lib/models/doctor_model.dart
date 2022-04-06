@@ -20,6 +20,9 @@ class DoctorModel {
   String? languagesKnown;
 
   DateTime? dob;
+  String? bloodGroup;
+  String? height;
+  String? weight;
   bool isEdited = false;
 
   DoctorModel({
@@ -37,6 +40,9 @@ class DoctorModel {
     this.specialization,
     this.languagesKnown,
     this.dob,
+    this.bloodGroup,
+    this.height,
+    this.weight,
     this.isEdited = false,
   });
 
@@ -55,6 +61,9 @@ class DoctorModel {
     specialization = json['specialization'];
     languagesKnown = json['languagesKnown'];
     dob = ExtDateTime.getDateTime(inputString: json['dob'], dateFormat: DateFormat.ddmmmmyyyyDash);
+    bloodGroup = json['blood_group'];
+    height = json['height'];
+    weight = json['weight'];
     isEdited = ((json['is_edited'] ?? 0) == 1 ? true : false);
   }
 
@@ -74,12 +83,18 @@ class DoctorModel {
     data['specialization'] = specialization;
     data['languagesKnown'] = languagesKnown;
     data['dob'] = dob?.toFormattedString(DateFormat.ddmmmmyyyyDash);
+    data['blood_group'] = bloodGroup;
+    data['height'] = height;
+    data['weight'] = weight;
     data['is_edited'] = (isEdited == true) ? 1 : 0;
     return data;
   }
 
   DoctorModel copy() {
-    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, profilePicLocal: profilePicLocal, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown, dob: dob, isEdited: isEdited);
+    print(this.toJson());
+    print("Before");
+    DoctorModel model = DoctorModel(id: id, firstName: firstName, lastName: lastName, profilePic: profilePic, profilePicLocal: profilePicLocal, favorite: favorite, primaryContactNo: primaryContactNo, rating: rating, emailAddress: emailAddress, qualification: qualification, description: description, specialization: specialization, languagesKnown: languagesKnown, dob: dob, bloodGroup: bloodGroup, height: height, weight: weight, isEdited: isEdited);
+    print(model.toJson());
     return model;
   }
 
