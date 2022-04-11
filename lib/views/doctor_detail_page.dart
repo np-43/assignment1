@@ -340,7 +340,7 @@ extension on _DoctorDetailPageState {
                 children: [
                   GeneralUtility.shared.getAssetImage(name: otherDetailEnum.iconName, height: 15, fit: BoxFit.fitHeight),
                   const SizedBox(width: 2),
-                  BaseText(text: otherDetailEnum.displayText, myFont: MyFont.rcRegular, fontSize: 20)
+                  BaseText(text: otherDetailEnum.displayText, myFont: MyFont.rcRegular, fontSize: 18)
                 ],
               ),
             ),
