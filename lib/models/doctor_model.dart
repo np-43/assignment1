@@ -1,28 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:tuple/tuple.dart';
 import '../utilities/extensions/common_extensions.dart';
 import '../utilities/extensions/date_extension.dart';
 import '../utilities/general_utility.dart';
 
-class DoctorModel {
+part 'doctor_model.g.dart';
+
+@HiveType(typeId: 1)
+class DoctorModel extends HiveObject {
+  @HiveField(0)
   int? id;
+  @HiveField(1)
   String? firstName;
+  @HiveField(2)
   String? lastName;
+  @HiveField(3)
   String? profilePic;
+  @HiveField(4)
   String? profilePicLocal;
+  @HiveField(5)
   bool? favorite;
+  @HiveField(6)
   String? primaryContactNo;
+  @HiveField(7)
   String? rating;
+  @HiveField(8)
   String? emailAddress;
+  @HiveField(9)
   String? qualification;
+  @HiveField(10)
   String? description;
+  @HiveField(11)
   String? specialization;
+  @HiveField(12)
   String? languagesKnown;
 
+  @HiveField(13)
   DateTime? dob;
+  @HiveField(14)
   String? bloodGroup;
+  @HiveField(15)
   String? height;
+  @HiveField(16)
   String? weight;
+  @HiveField(17)
   bool isEdited = false;
 
   DoctorModel({
