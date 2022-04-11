@@ -144,7 +144,7 @@ extension on APIManager {
       String json = map!.toJSONString().replaceAll("\"", "\\\"");
       data = "-d \"$json\" \\\n";
     }
-    print("\n********************************* cURL Request ***********************************"
+    print("\n********************************* cURL Request ***********************************\n"
         "curl -v \\\n"
         "-X ${option.method.toUpperCase()} \\\n"
         "$headers"
